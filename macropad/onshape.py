@@ -17,7 +17,7 @@ app = {                    # REQUIRED dict, must be named 'app'
         # 3rd row ----------
         (0x000040, 'Left', [LEFT_ARROW]),  # Left
         (0x000040, 'Down', [DOWN_ARROW]), # Down
-        (0x000040, 'Right', [RIGHT_ARROW,]), # Right
+        (0x000040, 'Right', [RIGHT_ARROW]), # Right
         # 4th row ----------
         (0x004000, 'Left', [Keycode.SHIFT, '3']), # Left View
         (0x004000, 'Bottom', [Keycode.SHIFT, '6']), # Bottom View
