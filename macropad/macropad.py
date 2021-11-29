@@ -13,14 +13,16 @@ app = {                    # REQUIRED dict, must be named 'app'
         # 2nd row ----------
         (0x202000, 'Undo', [Keycode.SHIFT, 'Z']), # Undo
         (0x202000, 'Up', [UP_ARROW]), # Up
-        (0x400000, 'Planes', 'P'),   #  Hide / Show Planes
+        (0x400000, 'Planes', 'P']),   #  Hide / Show Planes
         # 3rd row ----------
         (0x000040, 'Left', [LEFT_ARROW]),  # Left
         (0x000040, 'Down', [DOWN_ARROW]), # Down
-        (0x000040, 'Right', [RIGHT_ARROW,]), # Right
+        (0x000040, 'Right', [RIGHT_ARROW]), # Right
         # 4th row ----------
         (0x004000, 'Left', [Keycode.SHIFT, '3']), # Left View
         (0x004000, 'Bottom', [Keycode.SHIFT, '6']), # Bottom View
         (0x004000, 'Search', [Keycode.OPTION, 'C']), # Search Tools
         # Encoder button ---
         (0x000000, '', [Keycode.COMMAND, 'w']) # Close window/tab
+    ]
+}
