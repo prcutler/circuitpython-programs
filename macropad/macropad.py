@@ -11,7 +11,7 @@ app = {                    # REQUIRED dict, must be named 'app'
         (0x004000, 'Front', [Keycode.SHIFT, '1']), # Front View
         (0x400000, 'Back', [Keycode.SHIFT, '2 ']),      # Back View
         # 2nd row ----------
-        (0x202000, 'Undo', [Keycode.SHIFT, 'Z'), # Undo
+        (0x202000, 'Undo', [Keycode.SHIFT, 'Z']), # Undo
         (0x202000, 'Up', [UP_ARROW]), # Up
         (0x400000, 'Planes', 'P'),   #  Hide / Show Planes
         # 3rd row ----------
