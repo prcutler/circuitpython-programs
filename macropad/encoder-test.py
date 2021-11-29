@@ -14,9 +14,6 @@ import terminalio
 from adafruit_display_shapes.rect import Rect
 from adafruit_display_text import label
 from adafruit_macropad import MacroPad
-from adafruit_hid.keyboard import Keyboard
-from adafruit_hid.keycode import Keycode
-import usb_hid
 
 
 # CONFIGURABLES ------------------------
@@ -110,9 +107,9 @@ while True:
 #        last_position = position
 
     if position > last_position:
-        Keyboard.press('Z')
+        macropad.keyboard.press('Z')
     elif position < last_position:
-        Keyboard.press(Keycode.SHIFT, 'Z')
+        macropad.keyboard.press(Keycode.SHIFT, 'Z')
     else:
         pass
 
