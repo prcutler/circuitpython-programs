@@ -9,7 +9,7 @@ app = {                    # REQUIRED dict, must be named 'app'
         # 1st row ----------
         (0x228b22, 'Iso', [Keycode.SHIFT, '7']), # Isometric (Home) View - Forest Green
         (0x191970, 'Front', [Keycode.SHIFT, '1']), # Front View
-        (0xff0800, 'Undo', [Keycode.SHIFT, 'Z']),  # Undo - Candy Apple Red
+        (0xff0800, 'Undo', [Keycode.CONTROL, 'Z']),  # Undo - Candy Apple Red
         # 2nd row ----------
         (0x191970, 'Left', [Keycode.SHIFT, '3']),  # Left View
         (0x191970, 'Back', [Keycode.SHIFT, '2']),      # Back View
