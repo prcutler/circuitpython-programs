@@ -17,7 +17,7 @@ app = {                    # REQUIRED dict, must be named 'app'
         # 3rd row ----------
         (0x228b22, 'Zoom', 'F'),  # Zoom to fit
         (0x000080, 'Up', [Keycode.UP_ARROW]), # Up arrow
-        (0xffef00, 'Planes', 'P'),  # Hide / Show Planes - Canary Yellow
+        (0xffef00, 'Planes', 'p'),  # Hide / Show Planes - Canary Yellow
         # 4th row ----------
         (0x000080, 'Left', [Keycode.LEFT_ARROW]),  # Left
         (0x000080, 'Down', [Keycode.DOWN_ARROW]),  # Down
