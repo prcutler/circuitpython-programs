@@ -13,7 +13,7 @@ app = {                    # REQUIRED dict, must be named 'app'
         # 2nd row ----------
         (0x202000, 'Undo', [Keycode.SHIFT, 'Z']), # Undo
         (0x202000, 'Up', [UP_ARROW]), # Up
-        (0x400000, 'Planes', 'P'),   #  Hide / Show Planes
+        (0x400000, 'Planes', 'P']),   #  Hide / Show Planes
         # 3rd row ----------
         (0x000040, 'Left', [LEFT_ARROW]),  # Left
         (0x000040, 'Down', [DOWN_ARROW]), # Down
