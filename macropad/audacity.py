@@ -19,9 +19,9 @@ app = {
         (0x0000ff, 'Down    ', [Keycode.DOWN_ARROW]),
         (0x0000ff, 'END', [Keycode.END]),
         # 3rd row ----------
-        (0xeeeeee, 'SIL    ', [Keycode.COMMAND, 'L']),
+        (0xeeeeee, 'SIL    ', [Keycode.COMMAND, Keycode.L]),
         (0x00ff00, 'Pg Up    ', [Keycode.PAGE_UP]),
-        (0xeeeeee, 'Cut ', Keycode.COMMAND, 'X'),
+        (0xeeeeee, 'Cut ', [Keycode.COMMAND, Keycode.X]),
         # 4th row ----------
         (0x00ff00, 'HOME', [Keycode.HOME]),
         (0x00ff00, 'PG DWN   ', [Keycode.PAGE_DOWN]),
