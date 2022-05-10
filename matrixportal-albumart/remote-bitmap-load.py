@@ -68,7 +68,7 @@ bytes_img = io.BytesIO(response.content)
 
 # save_bitmap = displayio.Bitmap(64, 64, 1)
 
-image = displayio.Bitmap(bytes_img
+image = displayio.Bitmap(bytes_img)
 
 tile_grid = displayio.TileGrid(image, pixel_shader=palette)
 
