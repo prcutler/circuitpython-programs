@@ -2,12 +2,15 @@
 #
 # SPDX-License-Identifier: MIT
 
+# Note: Code works as of 2022-05-10 - will display Winamp and album art
+
 import board
 import displayio
 import adafruit_imageload
 
 display = board.DISPLAY
-display.rotation=90
+
+display.rotation = 90
 
 winamp, palette = adafruit_imageload.load("/winamp3.bmp",
                                           bitmap=displayio.Bitmap,

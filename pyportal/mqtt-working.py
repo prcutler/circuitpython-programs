@@ -2,14 +2,37 @@
 # SPDX-License-Identifier: MIT
 
 import time
+import board
 import adafruit_esp32spi.adafruit_esp32spi_socket as socket
 import adafruit_pyportal
 
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 
-pyportal = adafruit_pyportal.PyPortal()
+from adafruit_pyportal import PyPortal
 
-# This code works!  Will monitor for a Ping! message
+
+# Setup the PyPortal
+# Set up where we'll be fetching data from
+DATA_SOURCE = "https://silversaucer.com/album/data"
+
+# There's a few different places we look for data in the photo of the day
+IMAGE_LOCATION = ["image_url"]
+TITLE_LOCATION = ["artist"]
+DATE_LOCATION = ["album"]
+
+# the current working directory (where this file is)
+cwd = ("/"+__file__).rsplit('/', 1)[0]
+pyportal = PyPortal(url=DATA_SOURCE,
+                    json_path=(TITLE_LOCATION, DATE_LOCATION),
+                    status_neopixel=board.NEOPIXEL,
+                    default_bg=cwd+"/nasa_background.bmp",
+                    text_font=cwd+"/fonts/Arial-12.bdf",
+                    text_position=((5, 220), (5, 200)),
+                    text_color=(0xFFFFFF, 0xFFFFFF),
+                    text_maxlen=(50, 50), # cut off characters
+                    image_json_path=IMAGE_LOCATION,
+                    image_resize=(320, 320),
+                    image_position=(0, 0))
 
 ### WiFi ###
 
@@ -22,7 +45,6 @@ except ImportError:
 
 # ------------- MQTT Topic Setup ------------- #
 mqtt_topic = "albumart"
-
 
 ### Code ###
 # Define callback methods which are called when events occur
@@ -47,6 +69,14 @@ def message(client, topic, message):
     """
     if message == "Ping!":
         print("New message on topic {0}: {1}".format(topic, message))
+        response = None
+#        try:
+#            response = pyportal.fetch()
+#            print("Response is", response)
+#        except RuntimeError as e:
+#            print("Some error occurred, retrying! -", e)
+
+
 
 
 # Connect to WiFi
@@ -74,13 +104,10 @@ mqtt_client.on_message = message
 # Connect the client to the MQTT broker.
 mqtt_client.connect()
 
-photocell_val = 0
+
 while True:
     # Poll the message queue
     mqtt_client.loop()
 
     # Send a new message
-    # print("Sending photocell value: %d" % photocell_val)
-    # mqtt_client.publish(mqtt_topic, photocell_val)
-    # photocell_val += 1
     time.sleep(1)

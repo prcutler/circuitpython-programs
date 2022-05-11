@@ -11,7 +11,7 @@ import adafruit_requests as requests
 from adafruit_pyportal import PyPortal
 
 # Initialize hardware
-displayio.release_displays()
+
 NETWORK = Network(status_neopixel=board.NEOPIXEL, debug=False)
 NETWORK.connect()
 
@@ -22,20 +22,20 @@ except ImportError:
     print("WiFi secrets are kept in secrets.py, please add them there!")
     raise
 
-url = 'https://silversaucer.com/static/img/albumart/albumart.bmp'
+url = 'https://silversaucer.com/static/img/album-art/image_300.bmp'
 print(url)
 
-response = requests.get(url)
+response = requests.get(url, stream=True)
 
-path = 'album_art.bmp'
+saved_image = "album_art.bmp"
 
-with open(path, 'wb',) as f:
+with open(saved_image, 'wb',) as f:
     f.write(response.content)
 
 
 group = displayio.Group(scale=5, x=0, y=0)
 
-image_file = open("album_art.bmp", "rb")
+image_file = open("albumart.bmp", "rb")
 image = displayio.OnDiskBitmap(image_file)
 image_sprite = displayio.TileGrid(image, pixel_shader=getattr(image, 'pixel_shader', displayio.ColorConverter()))
 
