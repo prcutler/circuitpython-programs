@@ -70,11 +70,12 @@ def message(client, topic, message):
     if message == "Ping!":
         print("New message on topic {0}: {1}".format(topic, message))
         response = None
-#        try:
-#            response = pyportal.fetch()
-#            print("Response is", response)
-#        except RuntimeError as e:
-#            print("Some error occurred, retrying! -", e)
+        try:
+            response = pyportal.fetch()
+            print("Response is", response)
+        except RuntimeError as e:
+            print("Some error occurred, retrying! -", e)
+        time.sleep(60)
 
 
 
