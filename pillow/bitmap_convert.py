@@ -1,9 +1,9 @@
 from PIL import Image
 
 
-size = (320, 320)
-num_colors = 64
+size = (500,500)
+num_colors = 16
 img = Image.open('cps-logo-500.jpg')
 img = img.resize(size)
 newimg = img.convert(mode='P', colors=num_colors)
-newimg.save('cps-logo.bmp')
+newimg.save('16-cps-logo-500.bmp')

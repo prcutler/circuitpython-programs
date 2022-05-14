@@ -27,7 +27,7 @@ print(url)
 
 response = requests.get(url, stream=True)
 
-saved_image = "album_art.bmp"
+saved_image = "albumart.bmp"
 
 with open(saved_image, 'wb',) as f:
     f.write(response.content)

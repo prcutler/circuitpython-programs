@@ -32,32 +32,28 @@ response = requests.get(url)
 gc.collect()
 # print("GET complete, Type: ", type(response.content))
 
-response = requests.get(url, stream=True)
+response = requests.get(url)
 if response.status_code == 200:
-    with open("albumart.bmp", "wb") as f:
+    with open("/img/albumart.bmp", "wb") as f:
         for chunk in response.iter_content(chunk_size=32):
             f.write(chunk)
         f.close()
         print("File written")
-    # response.close()
+    response.close()
 
     print(os.listdir())
 
     # open('bg256.bmp', 'wb').write(response.content)
-else:
-    print("Bad get request")
 
-group = displayio.Group(scale=1, x=0, y=0)
-group.x = 0
-group.y = 160
+    group = displayio.Group(scale=5, x=0, y=0)
+    group.x = 0
+    group.y = 160
 
-image_file = open("/albumart.bmp", "rb")
-image = displayio.OnDiskBitmap(image_file)
-image_sprite = displayio.TileGrid(image, pixel_shader=getattr(image, 'pixel_shader', displayio.ColorConverter()))
+    image_file = open("/img/albumart.bmp", "rb")
+    image = displayio.OnDiskBitmap(image_file)
+    image_sprite = displayio.TileGrid(image, pixel_shader=getattr(image, 'pixel_shader', displayio.ColorConverter()))
 
-group.append(image_sprite)
-board.DISPLAY.show(group)
+    group.append(image_sprite)
+    board.DISPLAY.show(group)
 
-while True:
-    pass
-
+#    response.close()
