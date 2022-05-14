@@ -3,9 +3,9 @@ import board
 import displayio
 
 display = board.DISPLAY
-display.rotation = 90
+# display.rotation = 90
 
-group = displayio.Group(scale=5, x=0, y=0)
+group = displayio.Group(scale=1, x=0, y=0)
 group.x = 0
 group.y = 160
 

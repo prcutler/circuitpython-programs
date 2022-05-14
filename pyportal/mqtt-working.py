@@ -25,7 +25,7 @@ cwd = ("/"+__file__).rsplit('/', 1)[0]
 pyportal = PyPortal(url=DATA_SOURCE,
                     json_path=(TITLE_LOCATION, DATE_LOCATION),
                     status_neopixel=board.NEOPIXEL,
-                    default_bg=cwd+"/nasa_background.bmp",
+                    default_bg=cwd+"/cps-logo.bmp",
                     text_font=cwd+"/fonts/Arial-12.bdf",
                     text_position=((5, 220), (5, 200)),
                     text_color=(0xFFFFFF, 0xFFFFFF),

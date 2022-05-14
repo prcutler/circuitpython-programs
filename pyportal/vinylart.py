@@ -32,14 +32,13 @@ response = requests.get(url)
 gc.collect()
 # print("GET complete, Type: ", type(response.content))
 
-response = requests.get(url, stream=True)
+response = requests.get(url)
 if response.status_code == 200:
     with open("albumart.bmp", "wb") as f:
         for chunk in response.iter_content(chunk_size=32):
             f.write(chunk)
-        f.close()
-        print("File written")
-    # response.close()
+        print("Album art saved")
+    response.close()
 
     print(os.listdir())
 
