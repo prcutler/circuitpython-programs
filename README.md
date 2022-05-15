@@ -1,5 +1,5 @@
 # circuitpython-programs
-A collection of programs I use on various CircuitPython devices and the files I created to test various things.
+A collection of programs I use on various CircuitPython devices. Most of these files are just a scratchpad for the final project files.
 
 ### Audioreactive Featherwing
 File: `code.py`
@@ -19,3 +19,6 @@ Test scripts to manipulate images using Python.
 File: `pyportal-albumart.py`
 
 Using a PyPortal Titano, when I am logged into my website, silversaucer.com, I can have the site pick a random record.  That record's cover art is then displayed on the PyPortal.
+
+## Tips.md
+A collection of tips and tricks for CircuitPython, inspired by [todbot](https://github.com/todbot/circuitpython-tricks).
