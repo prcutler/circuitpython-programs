@@ -21,4 +21,4 @@ File: `pyportal-albumart.py`
 Using a PyPortal Titano, when I am logged into my website, silversaucer.com, I can have the site pick a random record.  That record's cover art is then displayed on the PyPortal.
 
 ## Tips.md
-A collection of tips and tricks for CircuitPython, inspired by [todbot](https://github.com/todbot/circuitpython-tricks).
+A [collection of tips and tricks for CircuitPython](tips.md), inspired by [todbot](https://github.com/todbot/circuitpython-tricks).
