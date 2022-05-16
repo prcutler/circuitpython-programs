@@ -1,5 +1,5 @@
-# circuitpython-programs
-A collection of programs I use on various CircuitPython devices. Most of these files are just a scratchpad for the final project files.
+# Overview
+A collection of programs and tips I use with CircuitPython. Most of these files are just a scratchpad for the final project files.
 
 ## Tips.md
 A [collection of tips and tricks for CircuitPython](tips.md), inspired by [todbot](https://github.com/todbot/circuitpython-tricks).
