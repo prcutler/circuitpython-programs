@@ -4,7 +4,7 @@ A collection of tips, tricks and methods I find myself needing on a regular basi
 Table of Contents
 =================
 * [Networking](#networking)
-  * [Manage Files](#manage-files)
+* [Manage Files](#manage-files)
 
 
 ## Networking
