@@ -22,7 +22,7 @@ except ImportError:
     print("WiFi secrets are kept in secrets.py, please add them there!")
     raise
 
-url = 'https://silversaucer.com/static/img/albumart/albumart.bmp'
+url = 'https://silversaucer.com/static/img/album-art/image_300.bmp'
 print(url)
 
 response = requests.get(url)
@@ -30,7 +30,10 @@ response = requests.get(url)
 path = 'album_art.bmp'
 
 with open(path, 'wb',) as f:
-    f.write(response.content)
+    for chunk in response.iter_content(chunk_size=32):
+        f.write(chunk)
+    print("Album art saved")
+response.close()
 
 
 matrix = rgbmatrix.RGBMatrix(
@@ -51,7 +54,7 @@ matrix = rgbmatrix.RGBMatrix(
 
 display = framebufferio.FramebufferDisplay(matrix, auto_refresh=False)
 g = displayio.Group()
-b, p = adafruit_imageload.load("img/liz256.bmp")
+b, p = adafruit_imageload.load("album_art.bmp")
 t = displayio.TileGrid(b, pixel_shader=p)
 t.x = 0
 g.append(t)

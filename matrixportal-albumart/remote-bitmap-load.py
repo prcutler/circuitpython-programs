@@ -53,7 +53,7 @@ matrix = rgbmatrix.RGBMatrix(
 
 display = framebufferio.FramebufferDisplay(matrix, auto_refresh=False)
 
-url = "https://silversaucer.com/static/img/albumart/bg256.bmp"
+url = "https://silversaucer.com/static/img/album-art/image_300.bmp"
 free_memory = gc.mem_free()
 print("Free memory: ", free_memory)
 
