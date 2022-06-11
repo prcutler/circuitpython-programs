@@ -31,6 +31,7 @@ Table of Contents
 =================
 * [Networking](#networking)
 * [Manage Files](#manage-files)
+* [Adafruit HID Keycode](#adafruit-hid-keycode)
 
 
 ## Networking
@@ -70,3 +71,6 @@ while True:
 ### Rename a file
 
     `os.rename("old_name.txt", "new_name.txt")`
+
+## Adafruit HID Keycodes
+* A handy list for MacroPad programming of [all the available keycodes](https://docs.circuitpython.org/projects/hid/en/latest/api.html#adafruit-hid-keycode-keycode).
