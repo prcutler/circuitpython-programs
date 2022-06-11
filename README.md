@@ -31,7 +31,7 @@ Table of Contents
 =================
 * [Networking](#networking)
 * [Manage Files](#manage-files)
-* [Adafruit HID Keycodes](#adafruit-hid-keycode)
+* [Adafruit HID Keycodes](#adafruit-hid-keycodes)
 
 
 ## Networking
