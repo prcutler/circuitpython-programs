@@ -16,7 +16,11 @@ from ulab.scipy.signal import spectrogram
 import rgbmatrix
 import framebufferio
 import displayio
+import adafruit_framebuf
 
+
+WIDTH = 64
+HEIGHT = 32
 
 displayio.release_displays()
 matrix = rgbmatrix.RGBMatrix(
@@ -27,6 +31,11 @@ matrix = rgbmatrix.RGBMatrix(
     doublebuffer=True)
 display = framebufferio.FramebufferDisplay(matrix, auto_refresh=False)
 print("Display info: ", display.height, display.width)
+
+buffer = bytearray(round(WIDTH * HEIGHT / 8))
+fb = adafruit_framebuf.FrameBuffer(
+    buffer, WIDTH, HEIGHT, buf_format=adafruit_framebuf.MVLSB
+)
 
 group = displayio.Group()
 #t = displayio.Tilegrid()
@@ -48,7 +57,10 @@ heatmap = [0xb000ff,0xa600ff,0x9b00ff,0x8f00ff,0x8200ff,
            0xff0000,0xff0000]
 
 #  size of the FFT data sample
-fft_size = 256
+fft_size = 128
+
+bitmap = displayio.Bitmap(display.width, display.height, len(heatmap))
+print("Heatmap len: ", len(heatmap))
 
 #  setup for onboard mic
 mic = audiobusio.PDMIn(board.SCL, board.SDA,
@@ -57,15 +69,13 @@ mic = audiobusio.PDMIn(board.SCL, board.SDA,
 #  use some extra sample to account for the mic startup
 samples_bit = array.array('H', [0] * (fft_size+3))
 
+
 #  sends visualized data to the RGB matrix with colors
 def waves(data, y):
     offset = max(0, (13-len(data))//2)
 
     for x in range(min(13, len(data))):
-        bitmap = (x+offset, y, heatmap[int(data[x])])
-        print(bitmap)
-        #group.insert(bitmap)
-        #display.show(bitmap)
+        fb.pixel(x + offset, y, heatmap[int(data[x])])
 
 
 # main loop
@@ -108,7 +118,7 @@ def main():
         #  updates scroll_offset to move data along matrix
         scroll_offset = (y + 1) % 9
         #  writes data to the RGB matrix
-        display.show(group)
+        display.refresh(target_frames_per_second=50, minimum_frames_per_second=0)
 
 
 main()

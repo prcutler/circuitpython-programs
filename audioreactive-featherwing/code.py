@@ -11,7 +11,7 @@ import neopixel
 from audiobusio import PDMIn
 from ulab import numpy as np
 from ulab.scipy.signal import spectrogram
-from supervisor import reload££
+from supervisor import reload
 from rainbowio import colorwheel
 import time 
 

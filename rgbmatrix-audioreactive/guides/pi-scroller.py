@@ -10,6 +10,7 @@ import rgbmatrix
 import framebufferio
 import adafruit_imageload
 import terminalio
+import terminalio
 from adafruit_display_text.label import Label
 
 displayio.release_displays()
