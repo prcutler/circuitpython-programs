@@ -1,21 +1,21 @@
 # SPDX-FileCopyrightText: 2021 Jeff Epler for Adafruit Industries
-#
+# Adapted from: https://learn.adafruit.com/ulab-crunch-numbers-fast-with-circuitpython/fft-example-waterfall-spectrum-analyzer
 # SPDX-License-Identifier: MIT
 
 import time
+import array
 from math import sin
 import board
 import displayio
 import rgbmatrix
 import framebufferio
-import adafruit_imageload
-import terminalio
-import terminalio
+import audiobusio
 from adafruit_display_text.label import Label
 from ulab import numpy as np
 from ulab.scipy.signal import spectrogram
 
 
+# This code works, and draws similar to the guide linked above
 displayio.release_displays()
 matrix = rgbmatrix.RGBMatrix(
     width=64, bit_depth=6,
@@ -47,21 +47,25 @@ scroll_offset = 0
 class RollingGraph(displayio.TileGrid):
     def __init__(self, scale=2):
         # Create a bitmap with heatmap colors
-        bitmap = displayio.Bitmap(display.width//scale, display.height//scale, len(palette))
-        tile_grid = displayio.TileGrid(bitmap, pixel_shader=palette, x=0, y=0, width=display.width//scale, height=display.height//scale)
+        bitmap = displayio.Bitmap(display.width//scale,
+                                       display.height//scale, len(palette))
+        super().__init__(bitmap, pixel_shader=palette)
+
+        self.scroll_offset = 0
 
     def show(self, data):
-        y = scroll_offset
-        bitmap = bitmap
+        y = self.scroll_offset
+        bitmap = self.bitmap
 
-        display.auto_refresh = False
+        # board.DISPLAY.auto_refresh = False
         offset = max(0, (bitmap.width-len(data))//2)
         for x in range(min(bitmap.width, len(data))):
             bitmap[x+offset, y] = int(data[x])
 
-        display.auto_refresh = True
+        # board.DISPLAY.auto_refresh = True
+        display.refresh()
 
-        scroll_offset = (y + 1) % self.bitmap.height
+        self.scroll_offset = (y + 1) % self.bitmap.height
 
 group = displayio.Group(scale=3)
 graph = RollingGraph(3)

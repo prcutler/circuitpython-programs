@@ -22,21 +22,37 @@ matrix = rgbmatrix.RGBMatrix(
     doublebuffer=True)
 display = framebufferio.FramebufferDisplay(matrix, auto_refresh=False)
 
-g = displayio.Group()
-b, p = adafruit_imageload.load("pi-logo32b.bmp")
-t = displayio.TileGrid(b, pixel_shader=p)
-t.x = 20
-g.append(t)
+# Create a two color palette
+palette = displayio.Palette(4)
+palette[0] = 0x000000
+palette[1] = 0x00FF00 # Blue
+palette[2] = 0x0000FF # Green
+palette[3] = 0xFF0000 # Red
 
-bitmap = displayio.Bitmap(5, 5, 1)
-g.append(bitmap)
+# Create a bitmap with two colors
+bitmap = displayio.Bitmap(display.width, display.height, len(palette))
 
-l = Label(text="Feather\nRP2040", font=terminalio.FONT, color=0xffffff, line_spacing=.7)
-l.x = 10
-l.y = 10
-g.append(l)
+# Create a TileGrid using the Bitmap and Palette
+tile_grid = displayio.TileGrid(bitmap, pixel_shader=palette)
 
-display.show(g)
+# Create a Group
+group = displayio.Group()
+
+# Add the TileGrid to the Group
+group.append(tile_grid)
+
+# Add the Group to the Display
+display.show(group)
+
+# Draw a pixel
+bitmap[55, 5] = 1
+bitmap[55, 6] = 2
+
+# Draw even more pixels
+for x in range(5, 30):
+    for y in range(10, 30):
+        bitmap[x, y] = 1
+
 
 target_fps = 60
 
