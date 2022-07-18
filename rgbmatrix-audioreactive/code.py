@@ -1,22 +1,18 @@
-# SPDX-FileCopyrightText: 2021 Liz Clark for Adafruit Industries
+# SPDX-FileCopyrightText: 2021 Jeff Epler for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
 
-'''Adapted from the FFT Example: Waterfall Spectrum Analyzer
-by Jeff Epler
-https://learn.adafruit.com/ulab-crunch-numbers-fast-with-circuitpython/overview and
-https://learn.adafruit.com/mini-led-matrix-audio-visualizer'''
-
+import time
 import array
+from math import sin
 import board
-import audiobusio
-import busio
-from ulab import numpy as np
-from ulab.scipy.signal import spectrogram
+import displayio
 import rgbmatrix
 import framebufferio
-import displayio
-
+import audiobusio
+from adafruit_display_text.label import Label
+from ulab import numpy as np
+from ulab.scipy.signal import spectrogram
 
 displayio.release_displays()
 matrix = rgbmatrix.RGBMatrix(
@@ -26,51 +22,54 @@ matrix = rgbmatrix.RGBMatrix(
     clock_pin=board.D13, latch_pin=board.D0, output_enable_pin=board.D1,
     doublebuffer=True)
 display = framebufferio.FramebufferDisplay(matrix, auto_refresh=False)
-print("Display info: ", display.height, display.width)
 
-group = displayio.Group()
-#t = displayio.Tilegrid()
+# Create a heatmap color palette
+palette = displayio.Palette(52)
+for i, pi in enumerate((0xff0000, 0xff0a00, 0xff1400, 0xff1e00,
+                        0xff2800, 0xff3200, 0xff3c00, 0xff4600,
+                        0xff5000, 0xff5a00, 0xff6400, 0xff6e00,
+                        0xff7800, 0xff8200, 0xff8c00, 0xff9600,
+                        0xffa000, 0xffaa00, 0xffb400, 0xffbe00,
+                        0xffc800, 0xffd200, 0xffdc00, 0xffe600,
+                        0xfff000, 0xfffa00, 0xfdff00, 0xd7ff00,
+                        0xb0ff00, 0x8aff00, 0x65ff00, 0x3eff00,
+                        0x17ff00, 0x00ff10, 0x00ff36, 0x00ff5c,
+                        0x00ff83, 0x00ffa8, 0x00ffd0, 0x00fff4,
+                        0x00a4ff, 0x0094ff, 0x0084ff, 0x0074ff,
+                        0x0064ff, 0x0054ff, 0x0044ff, 0x0032ff,
+                        0x0022ff, 0x0012ff, 0x0002ff, 0x0000ff)):
+    palette[51 - i] = pi
 
+bitmap = displayio.Bitmap(display.width, display.height, len(palette))
+tile_grid = displayio.TileGrid(bitmap, pixel_shader=palette)
 
-#  array of colors for the LEDs
-#  goes from purple to red
-#  gradient generated using https://colordesigner.io/gradient-generator
-heatmap = [0xb000ff,0xa600ff,0x9b00ff,0x8f00ff,0x8200ff,
-           0x7400ff,0x6500ff,0x5200ff,0x3900ff,0x0003ff,
-           0x0003ff,0x0047ff,0x0066ff,0x007eff,0x0093ff,
-           0x00a6ff,0x00b7ff,0x00c8ff,0x00d7ff,0x00e5ff,
-           0x00e0ff,0x00e6fd,0x00ecf6,0x00f2ea,0x00f6d7,
-           0x00fac0,0x00fca3,0x00fe81,0x00ff59,0x00ff16,
-           0x00ff16,0x45ff08,0x62ff00,0x78ff00,0x8bff00,
-           0x9bff00,0xaaff00,0xb8ff00,0xc5ff00,0xd1ff00,
-           0xedff00,0xf5eb00,0xfcd600,0xffc100,0xffab00,
-           0xff9500,0xff7c00,0xff6100,0xff4100,0xff0000,
-           0xff0000,0xff0000]
-
-#  size of the FFT data sample
+group = displayio.Group(scale=3)
 fft_size = 256
 
-#  setup for onboard mic
+# Add the TileGrid to the Group
+group.append(tile_grid)
+
+# Add the Group to the Display
+display.show(group)
+
+# instantiate board mic
 mic = audiobusio.PDMIn(board.SCL, board.SDA,
                        sample_rate=16000, bit_depth=16)
 
-#  use some extra sample to account for the mic startup
-samples_bit = array.array('H', [0] * (fft_size+3))
+# use some extra sample to account for the mic startup
+samples_bit = array.array('H', [0] * (fft_size + 3))
+
 
 #  sends visualized data to the RGB matrix with colors
 def waves(data, y):
-    offset = max(0, (13-len(data))//2)
+    offset = max(0, (32 - len(data)) // 2)
 
-    for x in range(min(13, len(data))):
-        bitmap = (x+offset, y, heatmap[int(data[x])])
-        print(bitmap)
-        #group.insert(bitmap)
-        #display.show(bitmap)
+    for x in range(min(32, len(data))):
+        bitmap[x + offset, y] = int(data[x])
 
 
-# main loop
+# Main Loop
 def main():
-    #  value for audio samples
     max_all = 10
     #  variable to move data along the matrix
     scroll_offset = 0
@@ -78,37 +77,36 @@ def main():
     y = scroll_offset
 
     while True:
-        #  record the audio sample
         mic.record(samples_bit, len(samples_bit))
-        #  send the sample to the ulab array
         samples = np.array(samples_bit[3:])
-        #  creates a spectogram of the data
         spectrogram1 = spectrogram(samples)
         # spectrum() is always nonnegative, but add a tiny value
         # to change any zeros to nonzero numbers
         spectrogram1 = np.log(spectrogram1 + 1e-7)
-        spectrogram1 = spectrogram1[1:(fft_size//2)-1]
-        #  sets range of the spectrogram
+        spectrogram1 = spectrogram1[1:(fft_size // 2) - 1]
         min_curr = np.min(spectrogram1)
         max_curr = np.max(spectrogram1)
-        #  resets values
+
         if max_curr > max_all:
             max_all = max_curr
         else:
-            max_curr = max_curr-1
+            max_curr = max_curr - 1
+
+        print(min_curr, max_all)
         min_curr = max(min_curr, 3)
-        # stores spectrogram in data
+        # Plot FFT
         data = (spectrogram1 - min_curr) * (51. / (max_all - min_curr))
-        # sets negative numbers to zero
+        # This clamps any negative numbers to zero
         data = data * np.array((data > 0))
-        #  resets y
+
         y = scroll_offset
         #  runs waves to write data to the LED's
         waves(data, y)
         #  updates scroll_offset to move data along matrix
         scroll_offset = (y + 1) % 9
-        #  writes data to the RGB matrix
+
         display.show(group)
+        display.refresh(target_frames_per_second=60, minimum_frames_per_second=0)
 
 
 main()

@@ -67,8 +67,8 @@ class RollingGraph(displayio.TileGrid):
 
         self.scroll_offset = (y + 1) % self.bitmap.height
 
-group = displayio.Group(scale=3)
-graph = RollingGraph(3)
+group = displayio.Group(scale=1)
+graph = RollingGraph(1)
 fft_size = 256
 
 # Add the TileGrid to the Group
