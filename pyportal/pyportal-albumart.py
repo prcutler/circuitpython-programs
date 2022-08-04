@@ -27,6 +27,14 @@ except ImportError:
 # ------------- MQTT Topic Setup ------------- #
 mqtt_topic = "albumart"
 
+# Load image on disk and display it
+display = board.DISPLAY
+maingroup = displayio.Group(x=80)
+display.show(maingroup)  # show main group
+bitmap = displayio.OnDiskBitmap(open("albumart.bmp", "rb"))
+image = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+maingroup.append(image)
+
 
 ### Code ###
 # Define callback methods which are called when events occur
@@ -65,11 +73,13 @@ def message(client, topic, message):
             response.close()
 
             display = board.DISPLAY
-            maingroup = displayio.Group()  # everything goes in maingroup
+            maingroup = displayio.Group(x=80)  # everything goes in maingroup
             display.show(maingroup)  # show main group
             bitmap = displayio.OnDiskBitmap(open("albumart.bmp", "rb"))
             image = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
             maingroup.append(image)  #
+
+            time.sleep(10)
 
         else:
             print("Bad get request")
@@ -103,7 +113,13 @@ mqtt_client.connect()
 
 while True:
     # Poll the message queue
-    mqtt_client.loop()
+    try:
+        mqtt_client.loop()
+
+    except RuntimeError or ConnectionError:
+        time.sleep(10)
+        mqtt_client.connect()
+        mqtt_client.loop()
 
     # Send a new message
-    time.sleep(1)
+    time.sleep(5)
