@@ -7,7 +7,7 @@ import displayio
 import adafruit_imageload
 
 display = board.DISPLAY
-display.rotation=90
+display.rotation = 90
 
 winamp, palette = adafruit_imageload.load("/winamp3.bmp",
                                           bitmap=displayio.Bitmap,
@@ -25,7 +25,7 @@ group.append(tile_grid_1)
 
 # album_art, palette = adafruit_imageload.load("/image_300.bmp", bitmap=displayio.Bitmap, palette=displayio.Palette)
 
-album_art = displayio.OnDiskBitmap("/image_300.bmp")
+album_art = displayio.OnDiskBitmap("/albumart.bmp")
 
 tile_grid_2 = displayio.TileGrid(album_art, pixel_shader=palette, y=120)
 group.append(tile_grid_2)
