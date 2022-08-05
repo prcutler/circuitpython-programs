@@ -44,13 +44,10 @@ album_info = artist + " - " + album
 display = board.DISPLAY
 display.rotation = 90
 
-winamp, palette = adafruit_imageload.load("winamp-png.bmp",
-                                          bitmap=displayio.Bitmap,
-                                          palette=displayio.Palette)
-
+winamp = displayio.OnDiskBitmap(open("winamp256.bmp", "rb"))
 
 # Create a TileGrid to hold the bitmap
-tile_grid_1 = displayio.TileGrid(winamp, pixel_shader=palette)
+tile_grid_1 = displayio.TileGrid(winamp, pixel_shader=winamp.pixel_shader, x=0)
 
 # Create a Group to hold the TileGrid
 group = displayio.Group()
@@ -58,9 +55,9 @@ group = displayio.Group()
 # Add the TileGrid to the Group
 group.append(tile_grid_1)
 
-album_art = displayio.OnDiskBitmap("/albumart.bmp")
+album_art = displayio.OnDiskBitmap("albumart.bmp")
 
-tile_grid_2 = displayio.TileGrid(album_art, pixel_shader=palette, y=120)
+tile_grid_2 = displayio.TileGrid(album_art, pixel_shader=album_art.pixel_shader, y=120)
 group.append(tile_grid_2)
 
 font = terminalio.FONT
@@ -69,7 +66,7 @@ color = 0x00E200
 text_area = label.Label(font, text=album_info, color=color)
 
 text_area.x = 130
-text_area.y = 40
+text_area.y = 42
 group.append(text_area)
 
 # Add the Group to the Display
@@ -125,12 +122,10 @@ def message(client, topic, message):
 
             album_info = artist + " - " + album
 
-            winamp, palette = adafruit_imageload.load("/winamp-png.bmp",
-                                                      bitmap=displayio.Bitmap,
-                                                      palette=displayio.Palette)
+            winamp = displayio.OnDiskBitmap(open("winamp256.bmp", "rb"))
 
             # Create a TileGrid to hold the bitmap
-            tile_grid_1 = displayio.TileGrid(winamp, pixel_shader=palette)
+            tile_grid_1 = displayio.TileGrid(winamp, pixel_shader=winamp.pixel_shader)
 
             # Create a Group to hold the TileGrid
             group = displayio.Group()
@@ -138,9 +133,9 @@ def message(client, topic, message):
             # Add the TileGrid to the Group
             group.append(tile_grid_1)
 
-            album_art = displayio.OnDiskBitmap("/albumart.bmp")
+            album_art = displayio.OnDiskBitmap("albumart.bmp")
 
-            tile_grid_2 = displayio.TileGrid(album_art, pixel_shader=palette, y=120)
+            tile_grid_2 = displayio.TileGrid(album_art, pixel_shader=album_art.pixel_shader, y=120)
             group.append(tile_grid_2)
 
             font = terminalio.FONT
@@ -148,8 +143,8 @@ def message(client, topic, message):
 
             text_area = label.Label(font, text=album_info, color=color)
 
-            text_area.x = 135
-            text_area.y = 30
+            text_area.x = 130
+            text_area.y = 42
             group.append(text_area)
 
             # Add the Group to the Display
