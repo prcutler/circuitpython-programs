@@ -113,6 +113,15 @@ def message(client, topic, message):
                 print("Album art saved")
             response.close()
 
+            resp = requests.get(data_source)
+            data = resp.json()
+            print(data)
+
+            # There's a few different places we look for data in the photo of the day
+            image_location = data["image_url"]
+            artist = data["artist"]
+            album = data["album"]
+
             winamp, palette = adafruit_imageload.load("/winamp3.bmp",
                                                       bitmap=displayio.Bitmap,
                                                       palette=displayio.Palette)
