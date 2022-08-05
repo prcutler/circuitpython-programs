@@ -33,7 +33,7 @@ resp = requests.get(data_source)
 data = resp.json()
 print(data)
 
-# There's a few different places we look for data in the photo of the day
+# Look at the json
 image_location = data["image_url"]
 artist = data["artist"]
 album = data["album"]
