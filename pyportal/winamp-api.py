@@ -10,10 +10,9 @@ import displayio
 
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 import adafruit_requests as requests
-
-
-# the current working directory (where this file is)
-pyportal = PyPortal()
+import terminalio
+from adafruit_display_text import label
+import json
 
 ### WiFi ###
 
@@ -24,10 +23,23 @@ except ImportError:
     print("WiFi secrets are kept in secrets.py, please add them there!")
     raise
 
-# ------------- MQTT Topic Setup ------------- #
-mqtt_topic = "albumart"
+pyportal = PyPortal()
+pyportal.network.connect()
 
-# Load image on disk and display it
+# Get the Album title and artist name from JSON
+data_source = "https://silversaucer.com/album/data"
+
+resp = requests.get(data_source)
+data = resp.json()
+print(data)
+
+# There's a few different places we look for data in the photo of the day
+image_location = data["image_url"]
+artist = data["artist"]
+album = data["album"]
+
+
+# Load image on disk and display it on first boot
 display = board.DISPLAY
 display.rotation = 90
 
@@ -50,9 +62,20 @@ album_art = displayio.OnDiskBitmap("/albumart.bmp")
 tile_grid_2 = displayio.TileGrid(album_art, pixel_shader=palette, y=120)
 group.append(tile_grid_2)
 
+font = terminalio.FONT
+color = 0x00E200
+
+text_area = label.Label(font, text=artist, color=color)
+
+text_area.x = 135
+text_area.y = 30
+group.append(text_area)
+
 # Add the Group to the Display
 display.show(group)
 
+# ------------- MQTT Topic Setup ------------- #
+mqtt_topic = "albumart"
 
 ### Code ###
 # Define callback methods which are called when events occur
@@ -107,6 +130,15 @@ def message(client, topic, message):
 
             tile_grid_2 = displayio.TileGrid(album_art, pixel_shader=palette, y=120)
             group.append(tile_grid_2)
+
+            font = terminalio.FONT
+            color = 0x00E200
+
+            text_area = label.Label(font, text=artist, color=color)
+
+            text_area.x = 135
+            text_area.y = 30
+            group.append(text_area)
 
             # Add the Group to the Display
             display.show(group)
