@@ -38,12 +38,13 @@ image_location = data["image_url"]
 artist = data["artist"]
 album = data["album"]
 
+album_info = artist + " - " + album
 
 # Load image on disk and display it on first boot
 display = board.DISPLAY
 display.rotation = 90
 
-winamp, palette = adafruit_imageload.load("/winamp3.bmp",
+winamp, palette = adafruit_imageload.load("winamp-png.bmp",
                                           bitmap=displayio.Bitmap,
                                           palette=displayio.Palette)
 
@@ -65,10 +66,10 @@ group.append(tile_grid_2)
 font = terminalio.FONT
 color = 0x00E200
 
-text_area = label.Label(font, text=artist, color=color)
+text_area = label.Label(font, text=album_info, color=color)
 
-text_area.x = 135
-text_area.y = 30
+text_area.x = 130
+text_area.y = 40
 group.append(text_area)
 
 # Add the Group to the Display
@@ -122,7 +123,9 @@ def message(client, topic, message):
             artist = data["artist"]
             album = data["album"]
 
-            winamp, palette = adafruit_imageload.load("/winamp3.bmp",
+            album_info = artist + " - " + album
+
+            winamp, palette = adafruit_imageload.load("/winamp-png.bmp",
                                                       bitmap=displayio.Bitmap,
                                                       palette=displayio.Palette)
 
@@ -143,7 +146,7 @@ def message(client, topic, message):
             font = terminalio.FONT
             color = 0x00E200
 
-            text_area = label.Label(font, text=artist, color=color)
+            text_area = label.Label(font, text=album_info, color=color)
 
             text_area.x = 135
             text_area.y = 30
@@ -157,11 +160,6 @@ def message(client, topic, message):
         else:
             print("Bad get request")
 
-
-# Connect to WiFi
-print("Connecting to WiFi...")
-pyportal.network.connect()
-print("Connected!")
 
 # Initialize MQTT interface with the esp interface
 # pylint: disable=protected-access
