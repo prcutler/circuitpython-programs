@@ -120,7 +120,9 @@ def message(client, topic, message):
             artist = data["artist"]
             album = data["album"]
 
-            album_info = artist + " - " + album
+            album_str = artist + " - " + album
+
+            album_info = album_str[:30]
 
             winamp = displayio.OnDiskBitmap(open("winamp256.bmp", "rb"))
 
