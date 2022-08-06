@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
+# Code based on Adafruit Learn Guides incl NASA Image
 
 import time
 import board
