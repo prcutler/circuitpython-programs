@@ -38,6 +38,12 @@ while True:
     time.sleep(5)
 ```
 
+### Create a TCP socket
+```
+pool = socketpool.SocketPool(wifi.radio)
+sock = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+```
+(This creates an IPV4 TCP socket)
 
 ## Manage Files
 
