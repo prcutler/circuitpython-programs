@@ -4,7 +4,7 @@ import socketpool
 HOST = "192.168.1.119"
 PORT = 23
 
-buffer = bytearray(32)
+buffer = bytearray(1024)
 print("test")
 
 
@@ -18,6 +18,6 @@ print("Message sent")
 
 msg = s.recv_into(buffer)
 print("Msg received")
-print(msg.decode())
+print(msg)
 
 print("Done")
