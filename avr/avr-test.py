@@ -4,10 +4,20 @@ import socketpool
 HOST = "192.168.1.119"
 PORT = 23
 
-pool = socketpool.SocketPool(wifi.radio)
-sock = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+buffer = bytearray(32)
+print("test")
 
-sock.connect((HOST, PORT))
-sock.send(b"Z2TUNER\n")
-# data = sock.recv(1024)
+
+pool = socketpool.SocketPool(wifi.radio)
+s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+
+s.connect((HOST, PORT))
+print("Connected!")
+zone2_check = s.send(b"Z2?\n")
+print("Message sent")
+
+msg = s.recv_into(buffer)
+print("Msg received")
+print(msg.decode())
+
 print("Done")
