@@ -1,5 +1,6 @@
 import wifi
 import socketpool
+import time
 
 HOST = "192.168.1.119"
 PORT = 23
@@ -11,12 +12,13 @@ s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
 
 s.connect((HOST, PORT))
 print("Connected!")
-zone2_check = s.send(b"Z2?\n")
+zone2_check = s.send(b"Z2MUON\n")
+mute_off = s.send(b"Z2MUOFF\n")
 print("Message sent: query Zone 2 Power Status")
 
-bytes_rec = s.recv_into(buffer)
-msg_str = bytearray.decode(buffer)
-print("Msg received")
-print(msg_str)
+#bytes_rec = s.recv_into(buffer)
+#msg_str = bytearray.decode(buffer)
+#print("Msg received")
+#print(msg_str)
 
 print("Done")
