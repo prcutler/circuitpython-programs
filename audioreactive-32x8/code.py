@@ -13,10 +13,9 @@ from ulab import numpy as np
 from ulab.scipy.signal import spectrogram
 from supervisor import reload
 from rainbowio import colorwheel
-import time 
+import time
 
-
-# Digital Audio 
+# Digital Audio
 import audiocore
 import audiobusio
 
@@ -40,13 +39,11 @@ low_bin = 20
 high_bin = 40  # Highest bin "
 
 # Set NeoPixel
-pixel_pin = board.D6  # NeoPixel LED strand is connected to GPIO #0 / D0
-pixels = 32  # Number of pixels you are using
+pixel_pin = board.A1  # NeoPixel LED strand is connected to GPIO #0 / D0
 
-
-# Add Neopixel Featherwing vertical and horizontal functions
-pixel_width = 8
-pixel_height = 4
+# Add LED Matrix vertical and horizontal functions
+pixel_width = 32
+pixel_height = 8
 
 pixels = neopixel.NeoPixel(
     pixel_pin,
@@ -62,8 +59,7 @@ pixel_framebuf = PixelFramebuffer(
     alternating=False,
 )
 
-# Set up digital mic
-mic = audiobusio.PDMIn(board.D10, board.D9,
+mic = audiobusio.PDMIn(board.SCL, board.SDA,
                        sample_rate=16000, bit_depth=16)
 rec_buf = array("H", [0] * fft_size)  # 16-bit audio samples
 
@@ -129,10 +125,9 @@ for column in range(pixel_width):
     )
 # print(column_table)
 
-
 # MAIN LOOP -------------
 # Original dynamic_level = 10
-dynamic_level = 0  # For responding to changing volume levels
+dynamic_level = 10  # For responding to changing volume levels
 frames, start_time = 0, time.monotonic()  # For frames-per-second calc
 
 while True:
@@ -200,3 +195,4 @@ while True:
     except OSError:  # See "try" notes above regarding rare I2C errors.
         print("Restarting")
         reload()
+
