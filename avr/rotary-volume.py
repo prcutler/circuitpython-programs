@@ -27,18 +27,19 @@ except OSError:
     s.connect((HOST, PORT))
 print("Connected!")
 
-seesaw = seesaw.Seesaw(board.STEMMA_I2C(), addr=0x36)
 
-seesaw_product = (seesaw.get_version() >> 16) & 0xFFFF
+rot_enc = seesaw.Seesaw(board.STEMMA_I2C(), addr=0x36)
+
+seesaw_product = (rot_enc.get_version() >> 16) & 0xFFFF
 print("Found product {}".format(seesaw_product))
 if seesaw_product != 4991:
     print("Wrong firmware loaded?  Expected 4991")
 
-seesaw.pin_mode(24, seesaw.INPUT_PULLUP)
-button = digitalio.DigitalIO(seesaw, 24)
+rot_enc.pin_mode(24, rot_enc.INPUT_PULLUP)
+button = digitalio.DigitalIO(rot_enc, 24)
 button_held = False
 
-encoder = rotaryio.IncrementalEncoder(seesaw)
+encoder = rotaryio.IncrementalEncoder(rot_enc)
 last_position = 0
 
 while True:
