@@ -12,10 +12,14 @@ PORT = 23
 buffer = bytearray(1024)
 
 # wifi.radio.connect(secrets["ssid"], secrets["password"])
-pool = socketpool.SocketPool(wifi.radio)
-s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
-
-s.connect((HOST, PORT))
+try:
+    pool = socketpool.SocketPool(wifi.radio)
+    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+    s.connect((HOST, PORT))
+except OSError:
+    pool = socketpool.SocketPool(wifi.radio)
+    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+    s.connect((HOST, PORT))
 print("Connected!")
 
 # use default I2C bus
@@ -48,14 +52,13 @@ def mute_toggle():
         s.send(b"Z2MUOFF\n")
         print(mute_response is "Z2MUOFF")
         print("Mute off")
-        pass
 
 
 # Check each button, if pressed, light up the matching neopixel!
 while True:
     if neokey[0]:
         print("Button A")
-        s.send(b"Z2VCR-1\n")
+        s.send(b"Z2AUX1\n")
         neokey.pixels[0] = 0xFF0000
     else:
         neokey.pixels[0] = 0x0
