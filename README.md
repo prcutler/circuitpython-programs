@@ -75,7 +75,7 @@ while True:
 
 ## Adafruit HID Keycodes
 * A handy list for MacroPad programming of [all the available keycodes](https://docs.circuitpython.org/projects/hid/en/latest/api.html#adafruit-hid-keycode-keycode).
-* [Extended list of HID keycodes] (https://github.com/Neradoc/CircuitPython_consumer_control_extended/blob/main/consumer_control_extended.py) by Neradoc
+* [Extended list of HID keycodes](https://github.com/Neradoc/CircuitPython_consumer_control_extended/blob/main/consumer_control_extended.py) by Neradoc
 
 ## Other
 
