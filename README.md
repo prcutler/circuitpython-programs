@@ -73,6 +73,15 @@ while True:
 
     `os.rename("old_name.txt", "new_name.txt")`
 
+### Read WAV file data (courtesy of todbot)
+```
+file = open("mywav.wav", "rb")
+b = bytearray(1024)  # read 1024 bytes at a time
+while file.readinto(b):
+  print(b)
+file.close()
+```
+
 ## Adafruit HID Keycodes
 * A handy list for MacroPad programming of [all the available keycodes](https://docs.circuitpython.org/projects/hid/en/latest/api.html#adafruit-hid-keycode-keycode).
 * [Extended list of HID keycodes](https://github.com/Neradoc/CircuitPython_consumer_control_extended/blob/main/consumer_control_extended.py) by Neradoc
