@@ -47,6 +47,23 @@ if response.status_code == 200:
     response.close()
 ```
 
+### ESP32-S2 WiFi Connect 
+```py
+# Connect to WiFi
+print("\n===============================")
+print("Connecting to WiFi...")
+pool = socketpool.SocketPool(wifi.radio)
+requests = adafruit_requests.Session(pool, ssl.create_default_context())
+while not wifi.radio.ipv4_address:
+    try:
+        wifi.radio.connect(secrets['ssid'], secrets['password'])
+    except (ConnectionError) as e:
+        print("Connection Error:", e)
+        print("Retrying in 10 seconds")
+    time.sleep(10)
+print("Connected!\n")
+```
+
 ### Fetch a JSON file
 ```
 import time
