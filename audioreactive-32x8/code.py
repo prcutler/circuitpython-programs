@@ -10,7 +10,7 @@ import board
 import neopixel
 from audiobusio import PDMIn
 from ulab import numpy as np
-from ulab.scipy.signal import spectrogram
+from ulab.utils import spectrogram
 from supervisor import reload
 from rainbowio import colorwheel
 import time
@@ -39,7 +39,7 @@ low_bin = 20
 high_bin = 40  # Highest bin "
 
 # Set NeoPixel
-pixel_pin = board.A1  # NeoPixel LED strand is connected to GPIO #0 / D0
+pixel_pin = board.A0  # NeoPixel LED strand is connected to GPIO #0 / D0
 
 # Add LED Matrix vertical and horizontal functions
 pixel_width = 32
@@ -59,7 +59,7 @@ pixel_framebuf = PixelFramebuffer(
     alternating=False,
 )
 
-mic = audiobusio.PDMIn(board.SCL, board.SDA,
+mic = audiobusio.PDMIn(board.SCL1, board.SDA1,
                        sample_rate=16000, bit_depth=16)
 rec_buf = array("H", [0] * fft_size)  # 16-bit audio samples
 
@@ -138,6 +138,7 @@ while True:
     try:
         mic.record(rec_buf, fft_size)  # Record batch of 16-bit samples
         samples = np.array(rec_buf)  # Convert to ndarray
+        print(samples)
         # Compute spectrogram and trim results. Only the left half is
         # normally needed (right half is mirrored), but we trim further as
         # only the low_bin to high_bin elements are interesting to graph.
