@@ -8,6 +8,8 @@ import usb_hid
 from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS
 
+# To use - hit reset to start timer and D5 to take a timestamp
+
 kbd = Keyboard(usb_hid.devices)
 layout = KeyboardLayoutUS(kbd)
 
@@ -22,5 +24,3 @@ while True:
         seconds = t % 60
         layout.write(f"{minutes:d}:{seconds:02d} ")
         time.sleep(0.3)
-
-
