@@ -86,6 +86,14 @@ while True:
 
 ## Manage Files
 
+### Erase Filesystem
+
+In `code.py`:
+```
+import storage
+storage.erase_filesystem()
+```
+
 ### Rename a file
 
     `os.rename("old_name.txt", "new_name.txt")`
