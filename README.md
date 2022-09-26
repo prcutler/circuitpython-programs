@@ -83,6 +83,22 @@ while True:
     time.sleep(5)
 ```
 
+## Buttons
+
+Neokey debouncing example:
+
+```
+prev_neokey0 = neokey[0]
+
+while True:
+    cur_neokey0 = neokey[0]
+    if cur_neokey0 and not prev_neokey0:
+        print("Button A Press")
+    elif not cur_neokey0 and prev_neokey0:
+        print("Button A Release")
+    
+    prev_neokey0 = cur_neokey0
+```
 
 ## Manage Files
 
