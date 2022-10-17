@@ -33,10 +33,10 @@ pixels = neopixel.NeoPixel(pixel_pin, pixel_num, brightness=0.5, auto_write=Fals
 
 # 32x8 needs alternating = True - Need to use vertical?
 pixel_wing_vertical = helper.PixelMap.vertical_lines(
-    pixels, 32, 8, helper.vertical_strip_gridmap(8, alternating=False)
+    pixels, 32, 8, helper.vertical_strip_gridmap(32, alternating=True)
 )
 pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
-    pixels, 32, 8, helper.horizontal_strip_gridmap(8, alternating=True)
+    pixels, 32, 8, helper.horizontal_strip_gridmap(32, alternating=True)
 )
 
 # The entire screen blinks green
@@ -50,10 +50,10 @@ pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
 # comet = Comet(pixels, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 # 1 strip of lights vertically moving horizontally l-r and then r-l
-comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+# comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
-# No - can't even describe
-# comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+# 4 columns of lights moving horizontally l-r then r-l
+comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 animations = AnimationSequence(comet, advance_interval=3, auto_clear=True)
 
