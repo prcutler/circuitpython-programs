@@ -1,8 +1,7 @@
 """NeoPixel Featherwing with rp2040 Feather Audio Reactive Lights"""
 
-"""Based on AUDIO SPECTRUM LIGHT SHOW for Adafruit EyeLights (LED Glasses + Driver). 
-From https://github.com/adafruit/Adafruit_Learning_System_Guides/blob/main/EyeLights_Audio_Spectrum/code.py 
-"""
+"""Based on Waterfall Visualizer). 
+From https://learn.adafruit.com/mini-led-matrix-audio-visualizer/code-the-mini-led-matrix-audio-visualizer"""
 
 from array import array
 from math import log
@@ -30,14 +29,13 @@ from adafruit_led_animation import helper
 
 # FFT/SPECTRUM CONFIG ----
 
-# Original fft_size = 256 and // 2
 fft_size = 256  # Sample size for Fourier transform, MUST be power of two
 spectrum_size = fft_size // 2  # Output spectrum is 1/2 of FFT result
 # Bottom of spectrum tends to be noisy, while top often exceeds musical
 # range and is just harmonics, so clip both ends off:
 # Original low = 10 and high = 75
-low_bin = 10
-high_bin = 75  # Highest bin "
+low_bin = 20
+high_bin = 40  # Highest bin "
 
 # Set NeoPixel
 pixel_pin = board.A0  # NeoPixel LED strand is connected to GPIO #0 / D0
@@ -60,9 +58,9 @@ pixel_framebuf = PixelFramebuffer(
     alternating=False,
 )
 
-# SCL1 and SDA1 for external StemmaQT PDM mic
 mic = audiobusio.PDMIn(board.SCL1, board.SDA1,
                        sample_rate=16000, bit_depth=16)
+
 rec_buf = array("H", [0] * fft_size)  # 16-bit audio samples
 
 # FFT/SPECTRUM SETUP -----
@@ -127,9 +125,10 @@ for column in range(pixel_width):
     )
 # print(column_table)
 
+
 # MAIN LOOP -------------
 # Original dynamic_level = 10
-dynamic_level = 10  # For responding to changing volume levels
+dynamic_level = 0  # For responding to changing volume levels
 frames, start_time = 0, time.monotonic()  # For frames-per-second calc
 
 while True:
@@ -140,7 +139,6 @@ while True:
     try:
         mic.record(rec_buf, fft_size)  # Record batch of 16-bit samples
         samples = np.array(rec_buf)  # Convert to ndarray
-        print(samples)
         # Compute spectrogram and trim results. Only the left half is
         # normally needed (right half is mirrored), but we trim further as
         # only the low_bin to high_bin elements are interesting to graph.
@@ -198,4 +196,3 @@ while True:
     except OSError:  # See "try" notes above regarding rare I2C errors.
         print("Restarting")
         reload()
-
