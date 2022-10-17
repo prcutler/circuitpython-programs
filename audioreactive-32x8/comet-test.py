@@ -31,23 +31,29 @@ pixel_num = 256
 
 pixels = neopixel.NeoPixel(pixel_pin, pixel_num, brightness=0.5, auto_write=False)
 
-# 32x8 needs alternating = True - Need to use vertical
+# 32x8 needs alternating = True - Need to use vertical?
 pixel_wing_vertical = helper.PixelMap.vertical_lines(
-    pixels, 32, 8, helper.horizontal_strip_gridmap(8, alternating=True)
+    pixels, 32, 8, helper.vertical_strip_gridmap(8, alternating=False)
 )
 pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
     pixels, 32, 8, helper.horizontal_strip_gridmap(8, alternating=True)
 )
 
 # The entire screen blinks green
-blink = Blink(pixels, speed=0.5, color=JADE)
+# blink = Blink(pixels, speed=0.5, color=JADE)
+
 # Appears to be inside out going vertically (starts in middle out mirrored?)
-rainbow_chase = RainbowChase(pixel_wing_vertical, speed=0.1, size=5, spacing=3)
-chase = Chase(pixel_wing_vertical, speed=0.1, size=3, spacing=6, color=AMBER)
+# rainbow_chase = RainbowChase(pixel_wing_vertical, speed=0.1, size=5, spacing=3)
+# chase = Chase(pixel_wing_vertical, speed=0.1, size=3, spacing=6, color=AMBER)
 
 # The pixel snakes up and down then moves horizontally left to right and then right to left
-comet = Comet(pixels, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+# comet = Comet(pixels, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
+# 1 strip of lights vertically moving horizontally l-r and then r-l
+comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+
+# No - can't even describe
+# comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 animations = AnimationSequence(comet, advance_interval=3, auto_clear=True)
 
