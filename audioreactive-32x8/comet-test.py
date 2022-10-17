@@ -49,11 +49,13 @@ pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
 # The pixel snakes up and down then moves horizontally left to right and then right to left
 # comet = Comet(pixels, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
-# 1 strip of lights vertically moving horizontally l-r and then r-l
-# comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+# Was with pixel_wing_vertical of 8: 1 strip of lights vertically moving horizontally l-r and then r-l
+# Now gives out of range error
+comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 # 4 columns of lights moving horizontally l-r then r-l
-comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+# Appears to move a width of 32 (or 8 because of 4 columns?!)
+# comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 animations = AnimationSequence(comet, advance_interval=3, auto_clear=True)
 
