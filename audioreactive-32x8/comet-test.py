@@ -29,14 +29,14 @@ pixel_pin = board.A0
 # Update to match the number of NeoPixels you have connected
 pixel_num = 256
 
-pixels = neopixel.NeoPixel(pixel_pin, pixel_num, brightness=0.5, auto_write=False)
+pixels = neopixel.NeoPixel(pixel_pin, pixel_num, brightness=0.2, auto_write=False)
 
-# 32x8 needs alternating = True - Need to use vertical?
+# 32x8 needs alternating = True? - Need to use vertical?
 pixel_wing_vertical = helper.PixelMap.vertical_lines(
-    pixels, 32, 8, helper.vertical_strip_gridmap(32, alternating=True)
+    pixels, 8, 32, helper.vertical_strip_gridmap(32, alternating=False)
 )
 pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
-    pixels, 32, 8, helper.horizontal_strip_gridmap(32, alternating=True)
+    pixels, 32, 8, helper.horizontal_strip_gridmap(32, alternating=False)
 )
 
 # The entire screen blinks green
@@ -50,12 +50,16 @@ pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
 # comet = Comet(pixels, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 # Was with pixel_wing_vertical of 8: 1 strip of lights vertically moving horizontally l-r and then r-l
-# Now gives out of range error
+# Now: 4 columns bouncing l-r r-l
 comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 # 4 columns of lights moving horizontally l-r then r-l
 # Appears to move a width of 32 (or 8 because of 4 columns?!)
 # comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+
+# ValueError: Slice and input sequence size do not match.
+# chase_h = Chase(pixel_wing_horizontal, speed=0.1, size=3, spacing=6, color=JADE)
+
 
 animations = AnimationSequence(comet, advance_interval=3, auto_clear=True)
 
