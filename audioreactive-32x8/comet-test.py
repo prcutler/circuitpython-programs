@@ -33,11 +33,11 @@ pixels = neopixel.NeoPixel(pixel_pin, pixel_num, brightness=0.2, auto_write=Fals
 
 #  32x8 needs alternating = True? - Need to use vertical?
 pixel_wing_vertical = helper.PixelMap.vertical_lines(
-    pixels, 32, 8, helper.vertical_strip_gridmap(8, alternating=True)
+    pixels, 32, 8, helper.vertical_strip_gridmap(8, alternating=False)
 )
 
 pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
-    pixels, 8, 32, helper.horizontal_strip_gridmap(8, alternating=False)
+    pixels, 8, 32, helper.horizontal_strip_gridmap(8, alternating=True)
 )
 
 # The entire screen blinks green
@@ -51,10 +51,11 @@ pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
 # comet = Comet(pixels, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 # With pixel_wing_vertical of 8: 1 strip of lights vertically moving horizontally l-r and then r-l
+# but disappears / doesn't use the right hand side columns
 # comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 # 1 strip of lights vertical
-# Identical to pixel_wing_vertical?! No - it disappears halfway through
+# Identical to pixel_wing_vertical?! Disappears halfway through, too
 comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 animations = AnimationSequence(comet, advance_interval=3, auto_clear=True)
