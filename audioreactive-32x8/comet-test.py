@@ -51,11 +51,11 @@ pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
 # comet = Comet(pixels, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 # With pixel_wing_vertical of 8: 1 strip of lights vertically moving horizontally l-r and then r-l
-# comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 # 1 strip of lights vertical - moves horizontally and bounces
 # Appears to be identical to pixel_wing_vertical?
-comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
+# comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 animations = AnimationSequence(comet, advance_interval=3, auto_clear=True)
 
