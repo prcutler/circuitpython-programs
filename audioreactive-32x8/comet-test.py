@@ -54,8 +54,7 @@ pixel_wing_horizontal = helper.PixelMap.horizontal_lines(
 # but disappears / doesn't use the right hand side columns
 # comet = Comet(pixel_wing_vertical, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
-# 1 strip of lights vertical
-# Identical to pixel_wing_vertical?! Disappears halfway through, too
+# 1 strip of lights vertical - moves horizontally and bounces
 comet = Comet(pixel_wing_horizontal, speed=0.10, color=PURPLE, tail_length=1, bounce=True)
 
 animations = AnimationSequence(comet, advance_interval=3, auto_clear=True)
