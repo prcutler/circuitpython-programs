@@ -22,6 +22,8 @@ import audiobusio
 # Import PixelFramebuffer
 # import helper
 from adafruit_pixel_framebuf import PixelFramebuffer
+from adafruit_pixel_framebuf import VERTICAL
+from adafruit_pixel_framebuf import HORIZONTAL
 from adafruit_led_animation.helper import PixelMap
 
 # Import from featherwing example
@@ -57,7 +59,8 @@ pixel_framebuf = PixelFramebuffer(
     pixels,
     pixel_width,
     pixel_height,
-    alternating=False,
+    orientation=VERTICAL,
+    rotation=2
 )
 
 # SCL1 and SDA1 for external StemmaQT PDM mic
