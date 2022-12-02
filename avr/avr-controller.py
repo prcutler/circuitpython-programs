@@ -1,7 +1,4 @@
-# SPDX-FileCopyrightText: 2021 John Furcean
-# SPDX-License-Identifier: MIT
-
-"""Code based on I2C rotary encoder simple test example."""
+"""Code based on I2C rotary encoder simple test example. by John Furcean under an MIT license"""
 
 import board
 from adafruit_seesaw import seesaw, rotaryio, digitalio
@@ -46,6 +43,7 @@ button_held = False
 
 encoder = rotaryio.IncrementalEncoder(rot_enc)
 last_position = 0
+
 
 def mute_check():
     z2_mute_check = s.send(b"Z2MU?\n")
