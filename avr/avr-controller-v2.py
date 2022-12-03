@@ -69,9 +69,12 @@ def mute_toggle():
 
         s.send(b'Z2MUON\n')
         print("Mute on")
+        neokey.pixels.fill(0xFF0000)
+
     else:
         print("Hello")
         s.send(b"Z2MUOFF\n")
+        neokey.pixels.fill(0x0)
         print(mute_response is "Z2MUOFF")
         print("Mute off")
 
@@ -141,6 +144,6 @@ while True:
     if neokey[3] and not key_3_state:
         print("Button D")
         #  turn on NeoPixel
-        neokey.pixels[3] = 0xFF0000
+        # neokey.pixels[3] = 0xFF0000
         mute_toggle()
         key_3_state = True
