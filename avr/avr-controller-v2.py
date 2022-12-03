@@ -141,6 +141,6 @@ while True:
     if neokey[3] and not key_3_state:
         print("Button D")
         #  turn on NeoPixel
-        neokey.pixels[0] = 0xFF0000
+        neokey.pixels[3] = 0xFF0000
         mute_toggle()
         key_3_state = True
