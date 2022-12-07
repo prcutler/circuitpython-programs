@@ -1,25 +1,15 @@
-# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
-# SPDX-FileCopyrightText: Copyright (c) 2021 Carter Nelson for Adafruit Industries
-#
-# SPDX-License-Identifier: Unlicense
+from secrets import secrets
 
-# Simple demo of the VL53L1X distance sensor.
-# Will print the sensed range/distance every second.
-
-import time
-
+import adafruit_minimqtt.adafruit_minimqtt as MQTT
 import adafruit_vl53l1x
 import board
 import socketpool
 import wifi
 
 # wifi.radio.connect(secrets["ssid"], secrets["password"])
-try:
-    pool = socketpool.SocketPool(wifi.radio)
-    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
-except OSError:
-    pool = socketpool.SocketPool(wifi.radio)
-    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+# Create a socket pool
+pool = socketpool.SocketPool(wifi.radio)
+wifi.radio.connect(secrets["ssid"], secrets["password"])
 print("Connected!")
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -31,15 +21,39 @@ vl53 = adafruit_vl53l1x.VL53L1X(i2c)
 vl53.distance_mode = 2
 vl53.timing_budget = 100
 
-# Initialize MQTT interface with the esp interface
-# pylint: disable=protected-access
-MQTT.set_socket(socket, pyportal.network._wifi.esp)
+salt_feed = "salt"
+
+# Define callback methods which are called when events occur
+# pylint: disable=unused-argument, redefined-outer-name
+def connected(client, userdata, flags, rc):
+    # This function will be called when the client is connected
+    # successfully to the broker.
+    print("Connected to SilverSaucer.com!")
+    # Subscribe to all changes on the onoff_feed.
+    client.subscribe(salt_feed)
+
+
+def disconnected(client, userdata, rc):
+    # This method is called when the client is disconnected
+    print("Disconnected from Adafruit IO!")
+
+
+def message(client, topic, message):
+    # This method is called when a topic the client is subscribed to
+    # has a new message.
+    print("New message on topic {0}: {1}".format(topic, message))
+
+
+def publish(client, userdata, topic, pid):
+    # This method is called when the mqtt_client publishes data to a feed.
+    print("Published to {0} with PID {1}".format(topic, pid))
 
 # Set up a MiniMQTT Client
 mqtt_client = MQTT.MQTT(
     broker=secrets["broker"],
     username=secrets["user"],
     password=secrets["pass"],
+    socket_pool=pool,
     is_ssl=False,
 )
 
@@ -72,8 +86,8 @@ print("--------------------")
 
 vl53.start_ranging()
 
-while True:
-    if vl53.data_ready:
-        print("Distance: {} cm".format(vl53.distance))
-        vl53.clear_interrupt()
-        time.sleep(1.0)
+distance = vl53.distance
+print("Distance: ", distance)
+mqtt_client.publish(salt_feed, distance)
+
+
