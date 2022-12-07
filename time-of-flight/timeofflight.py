@@ -31,6 +31,29 @@ vl53 = adafruit_vl53l1x.VL53L1X(i2c)
 vl53.distance_mode = 2
 vl53.timing_budget = 100
 
+# Initialize MQTT interface with the esp interface
+# pylint: disable=protected-access
+MQTT.set_socket(socket, pyportal.network._wifi.esp)
+
+# Set up a MiniMQTT Client
+mqtt_client = MQTT.MQTT(
+    broker=secrets["broker"],
+    username=secrets["user"],
+    password=secrets["pass"],
+    is_ssl=False,
+)
+
+# Setup the callback methods above
+mqtt_client.on_connect = connected
+mqtt_client.on_disconnect = disconnected
+mqtt_client.on_message = message
+
+# ------------- MQTT Topic Setup ------------- #
+mqtt_topic = "salt"
+
+# Connect the client to the MQTT broker.
+mqtt_client.connect()
+
 print("VL53L1X Simple Test.")
 print("--------------------")
 model_id, module_type, mask_rev = vl53.model_info
