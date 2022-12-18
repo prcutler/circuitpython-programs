@@ -1,16 +1,10 @@
 import board
-from adafruit_seesaw import seesaw, rotaryio, digitalio
-from secrets import secrets
-import wifi
-import socketpool
-from adafruit_neokey.neokey1x4 import NeoKey1x4
 import displayio
-import terminalio
-from adafruit_display_text import label
+import socketpool
+import wifi
+from adafruit_neokey.neokey1x4 import NeoKey1x4
+from adafruit_seesaw import seesaw, rotaryio, digitalio
 from adafruit_st7789 import ST7789
-from adafruit_progressbar.progressbar import HorizontalProgressBar
-from adafruit_progressbar.verticalprogressbar import VerticalProgressBar
-
 
 # Set up display
 displayio.release_displays()
@@ -58,17 +52,22 @@ neokey = NeoKey1x4(i2c_bus, addr=0x30)
 
 rot_enc = seesaw.Seesaw(board.STEMMA_I2C(), addr=0x36)
 
-seesaw_product = (rot_enc.get_version() >> 16) & 0xFFFF
-print("Found product {}".format(seesaw_product))
-if seesaw_product != 4991:
-    print("Wrong firmware loaded?  Expected 4991")
-
 rot_enc.pin_mode(24, rot_enc.INPUT_PULLUP)
 button = digitalio.DigitalIO(rot_enc, 24)
 button_held = False
 
 encoder = rotaryio.IncrementalEncoder(rot_enc)
 last_position = 0
+
+s.send(b"Z2?\n")
+status_bytes = s.recv_into(buffer)
+status_response = bytearray.decode(buffer)
+print("Zone 2 status: ", status_response)
+
+seesaw_product = (rot_enc.get_version() >> 16) & 0xFFFF
+print("Found product {}".format(seesaw_product))
+if seesaw_product != 4991:
+    print("Wrong firmware loaded?  Expected 4991")
 
 #  states for key presses
 key_0_state = False
