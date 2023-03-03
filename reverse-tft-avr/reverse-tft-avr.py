@@ -13,6 +13,8 @@ from adafruit_progressbar.horizontalprogressbar import (
 )
 from adafruit_display_shapes.rect import Rect
 from adafruit_display_text import bitmap_label,  wrap_text_to_lines
+from adafruit_debouncer import Debouncer
+
 
 # Set up Receiver
 HOST = "192.168.1.119"
@@ -81,18 +83,17 @@ last_position = 0
 button0 = digitalio.DigitalInOut(board.D0)
 button0.direction = digitalio.Direction.INPUT
 button0.pull = digitalio.Pull.UP
+button_0 = Debouncer(button0)
 
 button1 = digitalio.DigitalInOut(board.D1)
 button1.direction = digitalio.Direction.INPUT
 button1.pull = digitalio.Pull.DOWN
+button_1 = Debouncer(button1)
 
 button2 = digitalio.DigitalInOut(board.D2)
 button2.direction = digitalio.Direction.INPUT
 button2.pull = digitalio.Pull.DOWN
-
-button0_state = False
-button1_state = False
-button2_state = False
+button_2 = Debouncer(button2)
 
 pixel = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness = 0.6)
 
@@ -149,20 +150,18 @@ while True:
     # All values are True False False
     # print(button0.value, button1.value, button2.value)
 
-    if button0.value:
-        print("Button 0")
-    else:
+    button_0.update()
+    if button_0.fell:
         s.send(b"Z2AUX1\n")
         print("Changing input to CD")
 
-    if not button1.value:
-        print("Button 1")
-    else:
+    button_1.update()
+    if button_1.fell:
         s.send(b"Z2TUNER\n")
         print("Changing input to TUNER")
 
-    if not button2.value:
-        print("Button 2")
-    else:
+    button_2.update()
+    if button_2.fell:
         s.send(b"Z2CD\n")
         print("Changing input to Vinyl")
+ 

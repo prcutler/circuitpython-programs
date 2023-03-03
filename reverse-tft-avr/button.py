@@ -5,6 +5,7 @@ import socketpool
 import os
 import digitalio
 import neopixel
+import keypad
 
 # Set up Receiver
 HOST = "192.168.1.119"
