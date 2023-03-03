@@ -31,7 +31,7 @@ board.DISPLAY.show(avr)
 width = 183
 height = 30
 
-x = 30
+x = 28
 #y = board.DISPLAY.height // 3
 y = 100
 
