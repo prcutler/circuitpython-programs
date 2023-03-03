@@ -6,6 +6,13 @@ import socketpool
 import os
 import digitalio
 import neopixel
+import displayio
+from adafruit_progressbar.horizontalprogressbar import (
+    HorizontalProgressBar,
+    HorizontalFillDirection,
+)
+from adafruit_display_shapes.rect import Rect
+from adafruit_display_text import bitmap_label,  wrap_text_to_lines
 
 # Set up Receiver
 HOST = "192.168.1.119"
@@ -16,6 +23,32 @@ buffer = bytearray(1024)
 # Setup wifi
 wifi.radio.connect(os.getenv('CIRCUITPY_WIFI_SSID'), os.getenv('CIRCUITPY_WIFI_PASSWORD'))
 
+# Make the display context
+avr = displayio.Group()
+board.DISPLAY.show(avr)
+
+# set progress bar width and height relative to board's display
+width = 183
+height = 30
+
+x = 30
+#y = board.DISPLAY.height // 3
+y = 100
+
+# Create a new progress_bar object at (x, y)
+progress_bar = HorizontalProgressBar(
+    (x, y),
+    (width, height),
+    fill_color=0x000000,
+    outline_color=0xFFFFFF,
+    bar_color=0x13c100,
+    direction=HorizontalFillDirection.LEFT_TO_RIGHT
+)
+
+# Append progress_bar to the splash group
+avr.append(progress_bar)
+
+# Connect to the receiver
 try:
     pool = socketpool.SocketPool(wifi.radio)
     s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
