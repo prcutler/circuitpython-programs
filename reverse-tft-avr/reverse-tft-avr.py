@@ -14,6 +14,7 @@ from adafruit_progressbar.horizontalprogressbar import (
 from adafruit_display_shapes.rect import Rect
 from adafruit_display_text import bitmap_label,  wrap_text_to_lines
 from adafruit_debouncer import Debouncer
+import terminalio
 
 
 # Set up Receiver
@@ -49,6 +50,15 @@ progress_bar = HorizontalProgressBar(
 
 # Append progress_bar to the splash group
 avr.append(progress_bar)
+
+input = "Tuner"
+vol = "51"
+
+text = bitmap_label.Label(terminalio.FONT, text="Input: " + input, scale=2, x=28, y=25)
+avr.append(text)
+
+text = bitmap_label.Label(terminalio.FONT, text="Volume: " + vol, scale=2, x=28, y=65)
+avr.append(text)
 
 # Connect to the receiver
 try:
