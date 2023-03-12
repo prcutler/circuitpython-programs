@@ -132,7 +132,7 @@ def mute_toggle():
         avr = displayio.Group()
         board.DISPLAY.show(avr)
 
-        mute = bitmap_label.Label(terminalio.FONT, text="MUTED", scale=3, x=28, y=25)
+        mute = bitmap_label.Label(terminalio.FONT, text="MUTED", scale=4, x=75, y=55)
         avr.append(mute)
 
     else:
