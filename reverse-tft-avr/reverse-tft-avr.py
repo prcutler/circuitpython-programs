@@ -15,6 +15,7 @@ from adafruit_display_shapes.rect import Rect
 from adafruit_display_text import bitmap_label,  wrap_text_to_lines
 from adafruit_debouncer import Debouncer
 import terminalio
+import time
 
 
 # Set up Receiver
@@ -66,6 +67,8 @@ vol_label = bitmap_label.Label(terminalio.FONT, text="Volume: ", scale=2, x=28, 
 avr.append(vol_label)
 vol_text = bitmap_label.Label(terminalio.FONT, text=str(vol), scale=2, x=120, y=65)
 avr.append(vol_text)
+time.sleep(5)
+
 
 # Connect to the receiver
 try:
@@ -141,7 +144,6 @@ def mute_toggle():
         avr.append(mute)
 
     else:
-        print("Hello")
         s.send(b"Z2MUOFF\n")
         print(mute_response is "Z2MUOFF")
         print("Mute off")
@@ -203,17 +205,25 @@ while True:
     if button_0.fell:
         s.send(b"Z2AUX1\n")
         input = "CD"
-        text = bitmap_label.Label(terminalio.FONT, text="Input: " + input, scale=2, x=28, y=25)
-        avr.append(text)
+        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
+        avr[2] = input_text
         print("Changing input to CD")
 
     button_1.update()
     if button_1.fell:
         s.send(b"Z2TUNER\n")
+        input = "Tuner"
+
+        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
+        avr[2] = input_text
         print("Changing input to TUNER")
 
     button_2.update()
     if button_2.fell:
         s.send(b"Z2CD\n")
+        input = "Vinyl"
+
+        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
+        avr[2] = input_text
         print("Changing input to Vinyl")
  
