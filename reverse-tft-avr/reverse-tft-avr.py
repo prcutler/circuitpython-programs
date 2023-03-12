@@ -56,11 +56,16 @@ vol = 51
 
 progress_bar.value = vol
 
-text = bitmap_label.Label(terminalio.FONT, text="Input: " + input, scale=2, x=28, y=25)
-avr.append(text)
+# Add input and volume labels and data to display
+input_label = bitmap_label.Label(terminalio.FONT, text="Input: ", scale=2, x=28, y=25)
+avr.append(input_label)
+input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
+avr.append(input_text)
 
-text2 = bitmap_label.Label(terminalio.FONT, text="Volume: " + str(vol), scale=2, x=28, y=65)
-avr.append(text2)
+vol_label = bitmap_label.Label(terminalio.FONT, text="Volume: ", scale=2, x=28, y=65)
+avr.append(vol_label)
+vol_text = bitmap_label.Label(terminalio.FONT, text=str(vol), scale=2, x=120, y=65)
+avr.append(vol_text)
 
 # Connect to the receiver
 try:
