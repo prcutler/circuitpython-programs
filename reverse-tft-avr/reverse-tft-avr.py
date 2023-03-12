@@ -52,12 +52,14 @@ progress_bar = HorizontalProgressBar(
 avr.append(progress_bar)
 
 input = "Tuner"
-vol = "51"
+vol = 51
+
+progress_bar.value = vol
 
 text = bitmap_label.Label(terminalio.FONT, text="Input: " + input, scale=2, x=28, y=25)
 avr.append(text)
 
-text = bitmap_label.Label(terminalio.FONT, text="Volume: " + vol, scale=2, x=28, y=65)
+text = bitmap_label.Label(terminalio.FONT, text="Volume: " + str(vol), scale=2, x=28, y=65)
 avr.append(text)
 
 # Connect to the receiver
