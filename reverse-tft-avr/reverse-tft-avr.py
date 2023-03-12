@@ -44,11 +44,11 @@ progress_bar = HorizontalProgressBar(
     (width, height),
     fill_color=0x000000,
     outline_color=0xFFFFFF,
-    bar_color=0x13c100,
+    bar_color=0x0000ff,
     direction=HorizontalFillDirection.LEFT_TO_RIGHT
 )
 
-# Append progress_bar to the splash group
+# Append progress_bar to the avr group
 avr.append(progress_bar)
 
 input = "Tuner"
@@ -59,8 +59,8 @@ progress_bar.value = vol
 text = bitmap_label.Label(terminalio.FONT, text="Input: " + input, scale=2, x=28, y=25)
 avr.append(text)
 
-text = bitmap_label.Label(terminalio.FONT, text="Volume: " + str(vol), scale=2, x=28, y=65)
-avr.append(text)
+text2 = bitmap_label.Label(terminalio.FONT, text="Volume: " + str(vol), scale=2, x=28, y=65)
+avr.append(text2)
 
 # Connect to the receiver
 try:
@@ -128,11 +128,43 @@ def mute_toggle():
 
         s.send(b'Z2MUON\n')
         print("Mute on")
+
+        avr = displayio.Group()
+        board.DISPLAY.show(avr)
+
+        mute = bitmap_label.Label(terminalio.FONT, text="MUTED", scale=3, x=28, y=25)
+        avr.append(mute)
+
     else:
         print("Hello")
         s.send(b"Z2MUOFF\n")
         print(mute_response is "Z2MUOFF")
         print("Mute off")
+
+        avr = displayio.Group()
+        board.DISPLAY.show(avr)
+        progress_bar = HorizontalProgressBar(
+            (x, y),
+            (width, height),
+            fill_color=0x000000,
+            outline_color=0xFFFFFF,
+            bar_color=0x0000ff,
+            direction=HorizontalFillDirection.LEFT_TO_RIGHT
+        )
+
+        # Append progress_bar to the avr group
+        avr.append(progress_bar)
+
+        input = "Tuner"
+        vol = 51
+
+        progress_bar.value = vol
+
+        text = bitmap_label.Label(terminalio.FONT, text="Input: " + input, scale=2, x=28, y=25)
+        avr.append(text)
+
+        text2 = bitmap_label.Label(terminalio.FONT, text="Volume: " + str(vol), scale=2, x=28, y=65)
+        avr.append(text2)
 
 while True:
 
@@ -165,6 +197,9 @@ while True:
     button_0.update()
     if button_0.fell:
         s.send(b"Z2AUX1\n")
+        input = "CD"
+        text = bitmap_label.Label(terminalio.FONT, text="Input: " + input, scale=2, x=28, y=25)
+        avr.append(text)
         print("Changing input to CD")
 
     button_1.update()
