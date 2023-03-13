@@ -136,9 +136,25 @@ def mute_toggle():
         s.send(b'Z2MUON\n')
         print("Mute on")
 
-        avr = displayio.Group()
-        board.DISPLAY.show(avr)
+        # Create a bitmap with two colors
+        bitmap = displayio.Bitmap(240, 135, 2)
 
+        # Create a two color palette
+        palette = displayio.Palette(2)
+        palette[0] = 0x000000
+        palette[1] = 0xffffff
+
+        # Create a TileGrid using the Bitmap and Palette
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=palette)
+
+        # Add the TileGrid to the Group
+        avr.append(tile_grid)
+
+        # Fill the screen with white
+        for x in range(0, 240):
+            for y in range(0, 135):
+                bitmap[x, y] = 1
+                
         mute = bitmap_label.Label(terminalio.FONT, text="MUTED", scale=4, x=75, y=55,color=0xff0000)
         avr.append(mute)
 
@@ -146,36 +162,11 @@ def mute_toggle():
         s.send(b"Z2MUOFF\n")
         print(mute_response is "Z2MUOFF")
         print("Mute off")
+        avr.pop(6)
+        avr.pop(5)
 
-        avr = displayio.Group()
-        board.DISPLAY.show(avr)
-        progress_bar = HorizontalProgressBar(
-            (x, y),
-            (width, height),
-            fill_color=0x000000,
-            outline_color=0xFFFFFF,
-            bar_color=0x0000ff,
-            direction=HorizontalFillDirection.LEFT_TO_RIGHT
-        )
 
-        # Append progress_bar to the avr group
-        avr.append(progress_bar)
 
-        input = "Tuner"
-        vol = 51
-
-        progress_bar.value = vol
-
-        # Add input and volume labels and data to display
-        input_label = bitmap_label.Label(terminalio.FONT, text="Input: ", scale=2, x=28, y=25)
-        avr.append(input_label)
-        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
-        avr.append(input_text)
-
-        vol_label = bitmap_label.Label(terminalio.FONT, text="Volume: ", scale=2, x=28, y=65)
-        avr.append(vol_label)
-        vol_text = bitmap_label.Label(terminalio.FONT, text=str(vol), scale=2, x=120, y=65)
-        avr.append(vol_text)
 
 while True:
 
