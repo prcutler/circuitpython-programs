@@ -155,7 +155,7 @@ def mute_toggle():
             for y in range(0, 135):
                 bitmap[x, y] = 1
                 
-        mute = bitmap_label.Label(terminalio.FONT, text="MUTED", scale=4, x=75, y=55,color=0xff0000)
+        mute = bitmap_label.Label(terminalio.FONT, text="MUTED", scale=4, x=70, y=70,color=0xff0000)
         avr.append(mute)
 
     else:
@@ -164,9 +164,6 @@ def mute_toggle():
         print("Mute off")
         avr.pop(6)
         avr.pop(5)
-
-
-
 
 while True:
 
