@@ -16,6 +16,9 @@ from adafruit_display_text import bitmap_label,  wrap_text_to_lines
 from adafruit_debouncer import Debouncer
 import terminalio
 import time
+import adafruit_requests
+import ssl
+import ElementTree as ET
 
 
 # Set up Receiver
@@ -52,9 +55,39 @@ progress_bar = HorizontalProgressBar(
 # Append progress_bar to the avr group
 avr.append(progress_bar)
 
-input = "Tuner"
-vol = 51
+# Connect to the receiver
+try:
+    pool = socketpool.SocketPool(wifi.radio)
+    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+    s.connect((HOST, PORT))
+except OSError:
+    pool = socketpool.SocketPool(wifi.radio)
+    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
+    s.connect((HOST, PORT))
+print("Connected!")
 
+url = "http://192.168.1.119:8080/goform/AppCommand.xml"
+
+xml_body = '''
+    <?xml version="1.0" encoding="utf-8"?>
+    <tx>
+        <cmd id="1">GetAllZoneVolume</cmd>
+    </tx>'''
+
+requests = adafruit_requests.Session(pool, ssl.create_default_context())
+
+r = requests.post(url, data=xml_body)
+# print(r.text)
+
+root = ET.fromstring(r.text)
+# print("Root Type: ", type(root), root)
+# print("Root tag: ", root.tag)
+
+r.close()
+
+input = "Tuner"
+xml_vol = root[0][1][4].text
+vol = int(xml_vol)
 progress_bar.value = vol
 
 # Add input and volume labels and data to display
@@ -67,18 +100,6 @@ vol_label = bitmap_label.Label(terminalio.FONT, text="Volume: ", scale=2, x=28, 
 avr.append(vol_label)
 vol_text = bitmap_label.Label(terminalio.FONT, text=str(vol), scale=2, x=120, y=65)
 avr.append(vol_text)
-
-
-# Connect to the receiver
-try:
-    pool = socketpool.SocketPool(wifi.radio)
-    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
-    s.connect((HOST, PORT))
-except OSError:
-    pool = socketpool.SocketPool(wifi.radio)
-    s = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
-    s.connect((HOST, PORT))
-print("Connected!")
 
 # use default I2C bus
 i2c_bus = board.STEMMA_I2C()
@@ -116,6 +137,35 @@ button_2 = Debouncer(button2)
 
 pixel = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness = 0.6)
 
+def get_zone2_volume():
+
+    url = "http://192.168.1.119:8080/goform/AppCommand.xml"
+
+    xml_body = '''
+        <?xml version="1.0" encoding="utf-8"?>
+        <tx>
+            <cmd id="1">GetAllZoneVolume</cmd>
+        </tx>'''
+
+    requests = adafruit_requests.Session(pool, ssl.create_default_context())
+
+    r = requests.post(url, data=xml_body)
+    # print(r.text)
+
+    root = ET.fromstring(r.text)
+    # print("Root Type: ", type(root), root)
+    # print("Root tag: ", root.tag)
+
+    r.close()
+
+    input = "Tuner"
+    xml_vol = root[0][1][4].text
+    vol = int(xml_vol)
+    print("Volume: ", vol)
+    progress_bar.value = vol
+
+    avr[4].text = xml_vol
+    time.sleep(3)
 
 def mute_check():
     z2_mute_check = s.send(b"Z2MU?\n")
@@ -179,6 +229,9 @@ while True:
             s.send(b"Z2DOWN\n")
         last_position = position
         print("Position: {}".format(position))
+
+        get_zone2_volume()
+        
 
     # Toggle mute / unmute
     if not button.value and not button_held:
