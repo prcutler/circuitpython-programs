@@ -141,7 +141,7 @@ def get_zone2_volume():
 
     url = "http://192.168.1.119:8080/goform/AppCommand.xml"
 
-    xml_body = '''
+    xml_vol_body = '''
         <?xml version="1.0" encoding="utf-8"?>
         <tx>
             <cmd id="1">GetAllZoneVolume</cmd>
@@ -149,13 +149,15 @@ def get_zone2_volume():
 
     requests = adafruit_requests.Session(pool, ssl.create_default_context())
 
-    try:
-        r = requests.post(url, data=xml_body)
-    # print(r.text)
+    for attempt in range(5):
+        try:
+            r = requests.post(url, data=xml_vol_body)
         except RuntimeError:
-            time.sleep(3)
-            Print("Retrying...")
-            r = requests.post(url, data=xml_body)
+            time.sleep(2 ** attempt)
+        else:
+            break
+    else:
+        raise RuntiumeError("too many retries")
 
     root = ET.fromstring(r.text)
     # print("Root Type: ", type(root), root)
@@ -171,6 +173,46 @@ def get_zone2_volume():
 
     avr[4].text = xml_vol
     time.sleep(3)
+
+def get_zone2_source():
+
+    url = "http://192.168.1.119:8080/goform/AppCommand.xml"
+
+    xml_source_body = '''
+        <?xml version="1.0" encoding="utf-8"?>
+        <tx>
+            <cmd id="1">GetAllZoneSource</cmd>
+        </tx>'''
+
+    requests = adafruit_requests.Session(pool, ssl.create_default_context())
+
+    for attempt in range(5):
+        try:
+            r = requests.post(url, data=xml_source_body)
+        except RuntimeError:
+            time.sleep(2 ** attempt)
+        else:
+            break
+    else:
+        raise RuntiumeError("too many retries")
+
+    root = ET.fromstring(r.text)
+    # print("Root Type: ", type(root), root)
+    # print("Root tag: ", root.tag)
+
+    r.close()
+
+    xml_source = root[0][1][0].text
+    if vol is "AUX1":
+        display_source = "CD"
+    elif vol is "TUNER":
+        display_source = "TUNER"
+    else:
+        display_source = "Vinyl"
+
+    print("Source: ", xml_source, display_source)
+    avr[1].text = display_source
+
 
 def mute_check():
     z2_mute_check = s.send(b"Z2MU?\n")
@@ -217,6 +259,7 @@ def mute_toggle():
         s.send(b"Z2MUOFF\n")
         print(mute_response is "Z2MUOFF")
         print("Mute off")
+
         avr.pop(6)
         avr.pop(5)
 
@@ -254,26 +297,30 @@ while True:
     button_0.update()
     if button_0.fell:
         s.send(b"Z2AUX1\n")
-        input = "CD"
-        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
-        avr[2] = input_text
-        print("Changing input to CD")
+        get_zone2_source()
+#        input = "CD"
+#        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
+#        avr[2] = input_text
+#        print("Changing input to CD")
 
     button_1.update()
     if button_1.fell:
         s.send(b"Z2TUNER\n")
-        input = "Tuner"
-
-        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
-        avr[2] = input_text
-        print("Changing input to TUNER")
+        get_zone2_source()
+        
+#        input = "Tuner"
+#        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
+#        avr[2] = input_text
+#        print("Changing input to TUNER")
 
     button_2.update()
     if button_2.fell:
-        s.send(b"Z2CD\n")        
-        input = "Vinyl"
+        s.send(b"Z2CD\n")     
+        get_zone2_source()
 
-        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
-        avr[2] = input_text
-        print("Changing input to Vinyl")
+ #       input = "Vinyl"
+
+ #       input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
+ #       avr[2] = input_text
+ #       print("Changing input to Vinyl")
  
