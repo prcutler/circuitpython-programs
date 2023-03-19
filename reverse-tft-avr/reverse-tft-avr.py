@@ -149,8 +149,13 @@ def get_zone2_volume():
 
     requests = adafruit_requests.Session(pool, ssl.create_default_context())
 
-    r = requests.post(url, data=xml_body)
+    try:
+        r = requests.post(url, data=xml_body)
     # print(r.text)
+        except RuntimeError:
+            time.sleep(3)
+            Print("Retrying...")
+            r = requests.post(url, data=xml_body)
 
     root = ET.fromstring(r.text)
     # print("Root Type: ", type(root), root)
