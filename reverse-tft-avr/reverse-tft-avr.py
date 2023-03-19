@@ -192,8 +192,8 @@ def get_zone2_volume():
     print("Volume: ", vol)
     progress_bar.value = vol
 
-    avr[3].text = xml_vol
-    time.sleep(3)
+    avr[2].text = xml_vol
+
 
 def get_zone2_source():
 
@@ -298,8 +298,8 @@ while True:
             s.send(b"Z2DOWN\n")
         last_position = position
         print("Position: {}".format(position))
-
-        get_zone2_volume()
+    time.sleep(10)
+    get_zone2_volume()
         
 
     # Toggle mute / unmute
