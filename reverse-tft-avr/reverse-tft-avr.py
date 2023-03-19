@@ -68,7 +68,7 @@ print("Connected!")
 
 url = "http://192.168.1.119:8080/goform/AppCommand.xml"
 
-xml_body = '''
+xml_vol_body = '''
     <?xml version="1.0" encoding="utf-8"?>
     <tx>
         <cmd id="1">GetAllZoneVolume</cmd>
@@ -76,30 +76,51 @@ xml_body = '''
 
 requests = adafruit_requests.Session(pool, ssl.create_default_context())
 
-r = requests.post(url, data=xml_body)
+vol_request = requests.post(url, data=xml_vol_body)
 # print(r.text)
 
-root = ET.fromstring(r.text)
+vol_root = ET.fromstring(vol_request.text)
 # print("Root Type: ", type(root), root)
 # print("Root tag: ", root.tag)
 
-r.close()
+vol_request.close()
 
-input = "Tuner"
-xml_vol = root[0][1][4].text
+xml_vol = vol_root[0][1][4].text
 vol = int(xml_vol)
 progress_bar.value = vol
-
-# Add input and volume labels and data to display
-input_label = bitmap_label.Label(terminalio.FONT, text="Input: ", scale=2, x=28, y=25)
-avr.append(input_label)
-input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
-avr.append(input_text)
 
 vol_label = bitmap_label.Label(terminalio.FONT, text="Volume: ", scale=2, x=28, y=65)
 avr.append(vol_label)
 vol_text = bitmap_label.Label(terminalio.FONT, text=str(vol), scale=2, x=120, y=65)
 avr.append(vol_text)
+
+xml_source_body = '''
+    <?xml version="1.0" encoding="utf-8"?>
+    <tx>
+        <cmd id="1">GetAllZoneSource</cmd>
+    </tx>'''
+
+source_request = requests.post(url, data=xml_source_body)
+
+source_root = ET.fromstring(source_request.text)
+# print("Root Type: ", type(root), root)
+# print("Root tag: ", root.tag)
+
+source_request.close()
+
+xml_source = source_root[0][1][0].text
+if xml_source is "CD":
+    display_source = "Vinyl"
+elif xml_source is "TUNER":
+    display_source = "TUNER"
+else:
+    display_source = "CD"
+
+# Add input and volume labels and data to display
+input_label = bitmap_label.Label(terminalio.FONT, text="Input: ", scale=2, x=28, y=25)
+avr.append(input_label)
+input_text = bitmap_label.Label(terminalio.FONT, text=display_source, scale=2, x=110, y=25)
+avr.append(input_text)
 
 # use default I2C bus
 i2c_bus = board.STEMMA_I2C()
@@ -171,7 +192,7 @@ def get_zone2_volume():
     print("Volume: ", vol)
     progress_bar.value = vol
 
-    avr[4].text = xml_vol
+    avr[3].text = xml_vol
     time.sleep(3)
 
 def get_zone2_source():
@@ -196,22 +217,22 @@ def get_zone2_source():
     else:
         raise RuntiumeError("too many retries")
 
-    root = ET.fromstring(r.text)
+    source_root = ET.fromstring(r.text)
     # print("Root Type: ", type(root), root)
     # print("Root tag: ", root.tag)
 
     r.close()
 
-    xml_source = root[0][1][0].text
-    if vol is "AUX1":
-        display_source = "CD"
-    elif vol is "TUNER":
-        display_source = "TUNER"
-    else:
+    xml_source = source_root[0][1][0].text
+    if xml_source == "CD":
         display_source = "Vinyl"
+    elif xml_source == "TUNER":
+        display_source = "Tuner"
+    else:
+        display_source = "CD"
 
-    print("Source: ", xml_source, display_source)
-    avr[1].text = display_source
+    print("Source: ", xml_source, "Type: ", type(xml_source), display_source)
+    avr[4].text = display_source
 
 
 def mute_check():
@@ -293,34 +314,23 @@ while True:
 
     # All values are True False False
     # print(button0.value, button1.value, button2.value)
+    # Change the input source - 5 second sleep needed to poll the receiver correctly
 
     button_0.update()
     if button_0.fell:
         s.send(b"Z2AUX1\n")
+        time.sleep(5)
         get_zone2_source()
-#        input = "CD"
-#        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
-#        avr[2] = input_text
-#        print("Changing input to CD")
 
     button_1.update()
     if button_1.fell:
         s.send(b"Z2TUNER\n")
+        time.sleep(5)
         get_zone2_source()
         
-#        input = "Tuner"
-#        input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
-#        avr[2] = input_text
-#        print("Changing input to TUNER")
-
     button_2.update()
     if button_2.fell:
         s.send(b"Z2CD\n")     
+        time.sleep(5)
         get_zone2_source()
-
- #       input = "Vinyl"
-
- #       input_text = bitmap_label.Label(terminalio.FONT, text=input, scale=2, x=110, y=25)
- #       avr[2] = input_text
- #       print("Changing input to Vinyl")
  
