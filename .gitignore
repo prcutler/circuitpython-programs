@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 .DS_Store
+audioreactive-32x8/.vscode/settings.json
