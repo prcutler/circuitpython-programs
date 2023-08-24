@@ -1,16 +1,13 @@
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
 import time
-import board
-import adafruit_esp32spi.adafruit_esp32spi_socket as socket
-from adafruit_pyportal import PyPortal
-import adafruit_imageload
-import displayio
 
+import adafruit_esp32spi.adafruit_esp32spi_socket as socket
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 import adafruit_requests as requests
-
+import board
+import displayio
+from adafruit_pyportal import PyPortal
 
 # the current working directory (where this file is)
 pyportal = PyPortal()
