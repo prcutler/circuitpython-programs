@@ -72,7 +72,7 @@ def message(client, topic, message):
     :param str topic: The topic of the feed with a new value.
     :param str message: The new value
     """
-    if message == "Ping!":
+    if message == "New album picked!":
         print("New message on topic {0}: {1}".format(topic, message))
         response = None
 
