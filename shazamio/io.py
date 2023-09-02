@@ -1,4 +1,4 @@
-# Based on Adafruit Industries simpletest
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
 import os
@@ -107,9 +107,6 @@ io.on_message = message
 print("Connecting to Adafruit IO...")
 io.connect()
 
-# Below is an example of manually publishing a new  value to Adafruit IO.
-last = 0
-print("Publishing a new message every 10 seconds...")
 while True:
     # Explicitly pump the message loop.
     io.loop()
