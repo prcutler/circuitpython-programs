@@ -1,6 +1,9 @@
 import asyncio
 
+from Adafruit_IO import Client
 from shazamio import Shazam
+
+import config
 
 
 async def main():
@@ -11,7 +14,12 @@ async def main():
     print(track_title + ' by ' + artist)
 
     payload_json = {'song': {'title':track_title, 'artist':artist}}
+    payload = str(payload_json)
     print(payload_json)
+
+    aio = Client(config.aio_username, config.aio_key)
+    # audio = aio.feeds('audio')
+    aio.send_data('audio', payload)
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
