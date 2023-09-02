@@ -58,7 +58,7 @@ def reverse_scroll(line):
 def connected(client, userdata, flags, rc):
     # This function will be called when the client is connected
     # successfully to the broker.
-    print("Subscribing to %s" % (mqtt_topic))
+    print("Subscribing to %s" % mqtt_topic)
     client.subscribe(mqtt_topic)
 
 
@@ -76,20 +76,19 @@ def message(client, topic, message):
     print(topic, message)
 
     print(message)
-    # g.pop(0)
 
-    line1 = adafruit_display_text.label.Label(
+    line2 = adafruit_display_text.label.Label(
         terminalio.FONT,
         color=0x800080,
         text=message)
-    line1.x = display.width
-    line1.y = 8
+    line2.x = display.width
+    line2.y = 8
 
     g = displayio.Group()
-    g.append(line1)
+    g.append(line2)
     display.show(g)
 
-    scroll(line1)
+    scroll(line2)
     display.refresh(minimum_frames_per_second=0)
 
 
