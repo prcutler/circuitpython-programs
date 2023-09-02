@@ -2,9 +2,11 @@ import os
 import ssl
 import time
 
+import adafruit_display_text.label
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 import displayio
 import socketpool
+import terminalio
 import wifi
 from adafruit_matrixportal.matrix import Matrix
 
@@ -14,11 +16,40 @@ pool = socketpool.SocketPool(wifi.radio)
 ssl_context = ssl.create_default_context()
 
 displayio.release_displays()
-matrix = Matrix(width=64, height=32, bit_depth=6)
+matrix = Matrix(width=64, height=32, bit_depth=3)
 display = matrix.display
 
 # ------------- MQTT Topic Setup ------------- #
 mqtt_topic = "prcutler/feeds/audio"
+
+line1_bw = "Waiting for update.."
+
+line1 = adafruit_display_text.label.Label(
+    terminalio.FONT,
+    color=0x800080,
+    text=line1_bw)
+line1.x = display.width
+line1.y = 8
+
+g = displayio.Group()
+g.append(line1)
+display.show(g)
+
+
+def scroll(line):
+    line.x = line.x - 1
+    line_width = line.bounding_box[2]
+    if line.x < -line_width:
+        line.x = display.width
+
+
+# This function scrolls lines backwards.  Try switching which function is
+# called for line2 below!
+def reverse_scroll(line):
+    line.x = line.x + 1
+    line_width = line.bounding_box[2]
+    if line.x >= display.width:
+        line.x = -line_width
 
 
 ### Code ###
@@ -43,6 +74,23 @@ def message(client, topic, message):
     :param str message: The new value
     """
     print(topic, message)
+
+    print(message)
+    # g.pop(0)
+
+    line1 = adafruit_display_text.label.Label(
+        terminalio.FONT,
+        color=0x800080,
+        text=message)
+    line1.x = display.width
+    line1.y = 8
+
+    g = displayio.Group()
+    g.append(line1)
+    display.show(g)
+
+    scroll(line1)
+    display.refresh(minimum_frames_per_second=0)
 
 
 # Initialize MQTT interface with the esp interface
@@ -81,5 +129,5 @@ while True:
         mqtt_client.connect()
         mqtt_client.loop()
 
-    # Send a new message
-    time.sleep(5)
+    scroll(line1)
+    display.refresh(minimum_frames_per_second=0)

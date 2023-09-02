@@ -13,9 +13,11 @@ async def main():
     artist = out['track']['subtitle']
     print(track_title + ' by ' + artist)
 
-    payload_json = {'song': {'title':track_title, 'artist':artist}}
-    payload = str(payload_json)
-    print(payload_json)
+    # payload_json = {"title": track_title, "artist": artist}
+#    payload = str({"title": "Summer Girl (Bonus Track)", "artist": "HAIM"})
+    # payload = str(payload_json)
+    payload = track_title + " by " + artist
+    print(payload)
 
     aio = Client(config.aio_username, config.aio_key)
     # audio = aio.feeds('audio')
