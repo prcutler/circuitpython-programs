@@ -50,3 +50,15 @@ sock = pool.socket(pool.AF_INET, pool.SOCK_STREAM)
 ### Rename a file
 
     `os.rename("old_name.txt", "new_name.txt")`
+
+## Other
+
+## Enable Logging
+```
+import adafruit_logging as logging
+...
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+...
+mqtt_client.logger = logger
+```
