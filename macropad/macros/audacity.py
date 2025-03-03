@@ -7,7 +7,7 @@ from adafruit_hid.consumer_control_code import ConsumerControlCode
 
 app = {
     'name' : 'Audacity',
-    'order': 4,  # Application order on the keyboard
+#    'order': 5,  # Application order on the keyboard
     'macros' : [
         # COLOR    LABEL    KEY SEQUENCE
         # 1st row ----------
