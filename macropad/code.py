@@ -15,6 +15,9 @@ from adafruit_display_shapes.rect import Rect
 from adafruit_display_text import label
 from adafruit_macropad import MacroPad
 
+from autoscreen import AutoOffScreen
+from adafruit_displayio_sh1107_wrapper import SH1107_Wrapper
+
 
 # CONFIGURABLES ------------------------
 
