@@ -99,8 +99,6 @@ apps[app_index].switch()
 
 # MAIN LOOP ----------------------------
 
-autoscreen = AutoOffScreen(60 * 5)
-
 while True:
     # Read encoder position. If it's changed, switch apps.
     position = macropad.encoder

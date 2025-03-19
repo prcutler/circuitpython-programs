@@ -42,7 +42,7 @@ low_bin = 10
 high_bin = 75  # Highest bin "
 
 # Set NeoPixel
-pixel_pin = board.A0  # NeoPixel LED strand is connected to GPIO #0 / D0
+pixel_pin = board.GP27  # NeoPixel LED strand is connected to GPIO #0 / D0
 
 # Add LED Matrix vertical and horizontal functions
 pixel_width = 32
@@ -63,8 +63,8 @@ pixel_framebuf = PixelFramebuffer(
     rotation=2
 )
 
-# SCL1 and SDA1 for external StemmaQT PDM mic
-mic = audiobusio.PDMIn(board.SCL1, board.SDA1,
+# SCL1 and SDA1 for external StemmaQT PDM mic on QTPYrp2040 - SCL/SDA on Tiny2350
+mic = audiobusio.PDMIn(board.SCL, board.SDA,
                        sample_rate=16000, bit_depth=16)
 rec_buf = array("H", [0] * fft_size)  # 16-bit audio samples
 
