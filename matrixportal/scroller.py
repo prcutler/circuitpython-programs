@@ -13,7 +13,7 @@ from adafruit_matrixportal.matrixportal import MatrixPortal
 import adafruit_requests
 
 SCROLL_DELAY = 0.03
-time_interval = 5
+time_interval = 1
 
 text_color = 0xFC6900  # e.g., Retro Orange
 
@@ -26,13 +26,14 @@ matrixportal = MatrixPortal(width=128, height=32, bit_depth=5, status_neopixel=b
 
 matrixportal.add_text(
     text_font=terminalio.FONT,
-    text_position=(0, (matrixportal.graphics.display.height // 2) - 1),
+    text_position=(0, 20),
     scrolling=True,
 )
 
 header_text_area = matrixportal.add_text(
     text_font=terminalio.FONT,
     text_position=(0, (matrixportal.graphics.display.height // 6) - 1),
+    scrolling=True,
 )
 
 matrixportal.set_text("Upper left hand corner", header_text_area)
@@ -40,8 +41,8 @@ matrixportal.set_text("Upper left hand corner", header_text_area)
 
 # --- Main Loop ---
 while True:
-    matrixportal.set_text("This is a test")
     matrixportal.set_text_color(text_color)
+    matrixportal.set_text("This is a test")
     matrixportal.scroll_text(SCROLL_DELAY)
 
     time.sleep(time_interval)
