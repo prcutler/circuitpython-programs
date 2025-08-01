@@ -1,25 +1,36 @@
-wifi = None
+# SPDX-FileCopyrightText: 2020 Jeff Epler for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
+# This example implements a simple two line scroller using
+# Adafruit_CircuitPython_Display_Text. Each line has its own color
+# and it is possible to modify the example to use other fonts and non-standard
+# characters.
+
+import adafruit_display_text.label
+import board
+import displayio
+import framebufferio
+import rgbmatrix
+import terminalio
 
 import socketpool
 import ssl
 import wifi
+import adafruit_connection_manager
 import adafruit_requests
-import asyncio
 import os
 import time
-import displayio
 import json
-from adafruit_matrixportal.matrixportal import MatrixPortal
-import framebufferio
-import rgbmatrix
-import board
-import terminalio
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 from adafruit_io.adafruit_io import IO_MQTT, IO_HTTP
 from adafruit_minimqtt.adafruit_minimqtt import MMQTTException
-from adafruit_display_text.scrolling_label import ScrollingLabel
-import json
+import adafruit_requests
+import asyncio
 
+
+# wifi.radio.connect(ssid=os.getenv('CIRCUITPY_WIFI_SSID'),
+#                   password=os.getenv('CIRCUITPY_WIFI_PASSWORD'))
 
 # WIFI SETUP
 def connect_wifi_mqtt():
@@ -46,25 +57,19 @@ def reset():
         esp.reset()
         # pass
 
-
-# NETWORK AND ADAFRUIT IO SETUP
-time.sleep(3)  # wait for serial
-
-mqtt_topic = "prcutler/feeds/audio"
-aio_username = os.getenv("AIO_USERNAME")
-aio_key = os.getenv("AIO_KEY")
-
-pool = socketpool.SocketPool(wifi.radio)
-ssl_context = ssl.create_default_context()
-requests = adafruit_requests.Session(pool, ssl.create_default_context())
-
-# DISPLAYIO SETUP
-
-# matrix = MatrixPortal(width=128, height=32, bit_depth=5, status_neopixel=board.NEOPIXEL, debug=True)
-# display = matrix.display
-
+# If there was a display before (protomatter, LCD, or E-paper), release it so
+# we can create ours
 displayio.release_displays()
 
+# This next call creates the RGB Matrix object itself. It has the given width
+# and height. bit_depth can range from 1 to 6; higher numbers allow more color
+# shades to be displayed, but increase memory usage and slow down your Python
+# code. If you just want to show primary colors plus black and white, use 1.
+# Otherwise, try 3, 4 and 5 to see which effect you like best.
+#
+
+
+displayio.release_displays()
 matrix = rgbmatrix.RGBMatrix(
     width=128, bit_depth=4,
     rgb_pins=[
@@ -89,6 +94,16 @@ matrix = rgbmatrix.RGBMatrix(
 # Associate the RGB matrix with a Display so that we can use displayio features
 display = framebufferio.FramebufferDisplay(matrix, auto_refresh=False)
 
+# Set up wifi
+pool = adafruit_connection_manager.get_radio_socketpool(wifi.radio)
+ssl_context = adafruit_connection_manager.get_radio_ssl_context(wifi.radio)
+requests = adafruit_requests.Session(pool, ssl_context)
+
+# Get Adafruit IO data
+mqtt_topic = "prcutler/feeds/audio"
+aio_username = os.getenv("AIO_USERNAME")
+aio_key = os.getenv("AIO_KEY")
+
 aio = IO_HTTP(aio_username, aio_key, requests)
 
 try:
@@ -105,34 +120,53 @@ try:
     song_title_scroll = song_title + '        '
     song_artist_scroll = song_artist + '         '
 
-    title_scroll = ScrollingLabel(
-        terminalio.FONT,
-        text=song_title_scroll,
-        max_characters=10,
-        color=0xff0000,
-        animate_time=0.3
-    )
-    title_scroll.x = 1
-    title_scroll.y = 8
 
-    artist_scroll = ScrollingLabel(
-        terminalio.FONT,
-        text=song_artist_scroll,
-        max_characters=10,
-        color=0xFFFFFF,
-        animate_time=0.3
-    )
-    artist_scroll.x = 1
-    artist_scroll.y = 24
-
-    g = displayio.Group()
-    g.append(title_scroll)
-    g.append(artist_scroll)
-    display.root_group = g
 
 except:
     print("Adafruit IO reports 404 Error - is your feed empty?  Start recording.")
 
+# Create two lines of text to scroll. Besides changing the text, you can also
+# customize the color and font (using Adafruit_CircuitPython_Bitmap_Font).
+# To keep this demo simple, we just used the built-in font.
+# The Y coordinates of the two lines were chosen so that they looked good
+# but if you change the font you might find that other values work better.
+
+line1 = adafruit_display_text.label.Label(
+    terminalio.FONT,
+    color=0xff0000,
+    text=song_title_scroll)
+line1.x = display.width
+line1.y = 8
+
+line2 = adafruit_display_text.label.Label(
+    terminalio.FONT,
+    color=0x0080ff,
+    text=song_artist_scroll)
+line2.x = display.width
+line2.y = 24
+
+# Put each line of text into a Group, then show that group.
+g = displayio.Group()
+g.append(line1)
+g.append(line2)
+display.root_group = g
+
+# This function will scoot one label a pixel to the left and send it back to
+# the far right if it's gone all the way off screen. This goes in a function
+# because we'll do exactly the same thing with line1 and line2 below.
+def scroll(line):
+    line.x = line.x - 1
+    line_width = line.bounding_box[2]
+    if line.x < -line_width:
+        line.x = display.width
+
+# This function scrolls lines backwards.  Try switching which function is
+# called for line2 below!
+def reverse_scroll(line):
+    line.x = line.x + 1
+    line_width = line.bounding_box[2]
+    if line.x >= display.width:
+        line.x = -line_width
 
 # MQTT
 def connected(client, userdata, flags, rc):
@@ -162,11 +196,18 @@ def message(client, topic, payload):
     song_title_scroll = song_title + '        '
     song_artist_scroll = song_artist + '         '
 
-    title_scroll.text = song_title_scroll
-    artist_scroll.text = song_artist_scroll
+    line1 = song_title_scroll
+    line2 = song_artist_scroll
     time.sleep(3)
 
-
+# You can add more effects in this loop. For instance, maybe you want to set the
+# color of each label to a different value.
+# while True:
+#    scroll(line1)
+#    scroll(line2)
+#    reverse_scroll(line2)
+#    display.refresh(minimum_frames_per_second=0)
+#
 if wifi:
     mqtt_client = MQTT.MQTT(
         broker="io.adafruit.com",
@@ -192,16 +233,6 @@ mqtt_client.on_disconnect = disconnected
 mqtt_client.on_message = message
 mqtt_client.on_publish = publish
 
-while True:
-    try:
-        connect_wifi_mqtt()
-        break
-    except Exception or OSError as ex:
-        print(f"Exception: {ex} Resetting wifi...")
-        reset()
-        time.sleep(1)
-
-
 # ASYNC
 
 async def update_network():
@@ -218,8 +249,9 @@ async def update_network():
 
 async def update_ui():
     while True:
-        title_scroll.update()  # optional: force=True
-        artist_scroll.update()
+        scroll(line1)
+        scroll(line2)
+        display.refresh(minimum_frames_per_second=0)
         await asyncio.sleep(0.1)
 
 
