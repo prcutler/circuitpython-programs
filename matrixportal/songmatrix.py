@@ -57,7 +57,7 @@ ssl_context = ssl.create_default_context()
 requests = adafruit_requests.Session(pool, ssl.create_default_context())
 
 # DISPLAYIO SETUP
-#
+
 matrix = MatrixPortal(width=128, height=32, bit_depth=5, status_neopixel=board.NEOPIXEL, debug=True)
 display = matrix.display
 
